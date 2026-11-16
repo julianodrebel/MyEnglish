@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E0F11">
+<meta name="color-scheme" content="dark">
+<title>Meu Inglês</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0E0F11; --superficie: #17191C; --superficie-2: #202328; --nav: #141619;
+    --lateral: #111316; --lateral-borda: #1E2125;
+    --borda: #2A2E34; --borda-suave: #22252A; --borda-forte: #3A3F47;
+    --texto: #F2F3F5; --texto-2: #C9CDD3; --suave: #9BA1AA; --apagado: #6B717A;
+    --destaque: #FF6A3D; --destaque-hover: #FF7D55; --destaque-tinta: #1B0D06; --destaque-fundo: #2A1A13;
+    --ok: #4CC38A; --ok-fundo: rgba(76, 195, 138, .1); --desce: #FF8A63; --erro: #E5484D;
+    --fonte: Barlow, "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    --fonte-titulo: "Barlow Condensed", "Arial Narrow", Barlow, system-ui, sans-serif;
+    --raio: 16px; --raio-p: 12px;
+    --altura-nav: 72px;
+    --seguro-baixo: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--texto); font: 16px/1.45 var(--fonte);
+         -webkit-tap-highlight-color: transparent; }
+  [hidden] { display: none !important; }
+  h1, h2, h3, p { margin: 0; }
+  input, select, textarea, button { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  a { color: var(--texto); }
+  :focus-visible { outline: 2px solid var(--destaque); outline-offset: 2px; }
+  svg { flex: none; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .num-fonte { font-family: var(--fonte-titulo); font-variant-numeric: tabular-nums; }
+
+  /* ---------- campos e botões ---------- */
+  label, .rotulo-campo { display: block; font-size: .8125rem; font-weight: 600; color: var(--suave); margin-bottom: 6px; }
+  input, select, textarea { width: 100%; min-height: 48px; padding: 0 14px; border-radius: var(--raio-p);
+         border: 1px solid var(--borda); background: var(--superficie-2); color: var(--texto); font-size: 16px; }
+  input::placeholder { color: var(--apagado); }
+  .campo { margin-bottom: 14px; }
+
+  .botao { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px;
+           padding: 0 18px; border-radius: 14px; border: 1px solid var(--borda); background: transparent;
+           color: var(--texto); font-weight: 600; font-size: 15px; text-decoration: none; }
+  .botao:disabled { opacity: .5; cursor: default; }
+  .primario { background: var(--destaque); border-color: var(--destaque); color: var(--destaque-tinta);
+              font-family: var(--fonte-titulo); font-size: 20px; font-weight: 700; letter-spacing: .01em; }
+  .primario:hover { background: var(--destaque-hover); }
+  .grande { width: 100%; min-height: 56px; border-radius: var(--raio); font-size: 22px; }
+  .botao.largo { width: 100%; min-height: 56px; border-radius: var(--raio); }
+  .icone { width: 44px; height: 44px; min-height: 44px; padding: 0; border-radius: 22px; border: 0;
+           background: transparent; color: var(--suave); display: inline-grid; place-items: center; }
+  .icone:hover { color: var(--texto); background: var(--superficie-2); }
+  .icone:disabled { opacity: .35; cursor: default; }
+
+  .sobretitulo { font-size: .8125rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--suave); }
+  .cartao { background: var(--superficie); border: 1px solid var(--borda); border-radius: 20px; }
+  .vazio { color: var(--suave); text-align: center; padding: 28px 16px; }
+  .dica { font-size: 14px; color: var(--suave); }
+  .grupo-titulo { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 24px 4px 10px; }
+  .grupo-titulo span { font-weight: 600; letter-spacing: 0; text-transform: none; }
+
+  .busca { position: relative; margin: 0; }
+  .busca svg { position: absolute; left: 14px; top: 15px; color: var(--suave); pointer-events: none; }
+  .busca input { padding-left: 42px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { min-height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid var(--borda-forte); background: transparent;
+          color: var(--texto-2); font-size: 14px; font-weight: 600; }
+  .chip[aria-pressed="true"] { background: var(--texto); border-color: var(--texto); color: var(--bg); }
+  .chips.rolavel { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .chips.rolavel::-webkit-scrollbar { display: none; }
+  .chips.rolavel .chip { flex: none; }
+
+  .resumo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0 0 8px; }
+  .stat { padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; border-radius: var(--raio);
+          background: var(--superficie); border: 1px solid var(--borda); min-width: 0; }
+  .stat span { font-size: 13px; color: var(--suave); }
+  .stat b { font-family: var(--fonte-titulo); font-size: 30px; font-weight: 700; line-height: 1.05;
+            font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .positivo { color: var(--ok); }
+
+  .selo { flex: none; padding: 4px 10px; border-radius: 12px; border: 1px solid var(--borda-forte); color: var(--texto-2);
+          font-family: var(--fonte-titulo); font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .selo.feita { border-color: var(--ok); color: var(--ok); background: var(--ok-fundo); }
+
+  .trilho { position: relative; height: 6px; border-radius: 3px; background: var(--borda); margin-top: 8px; }
+  .trilho span { display: block; height: 100%; border-radius: 3px; background: var(--destaque); }
+  .trilho .dentro { background: var(--ok); }
+
+  /* ---------- login ---------- */
+  .login { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; padding: 24px 16px; }
+  .login-caixa { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 24px; }
+  .marca { display: flex; align-items: center; gap: 12px; }
+  .marca-icone { width: 44px; height: 44px; border-radius: 12px; background: var(--destaque); color: var(--destaque-tinta);
+                 display: grid; place-items: center; }
+  .marca-nome { font-family: var(--fonte-titulo); font-size: 32px; font-weight: 700; line-height: 1; }
+  .login form { padding: 20px; }
+  .login h2 { font-family: var(--fonte-titulo); font-size: 26px; margin-bottom: 16px; }
+  .ou { display: flex; align-items: center; gap: 12px; color: var(--suave); font-size: .875rem; margin: 18px 0; }
+  .ou::before, .ou::after { content: ""; flex: 1; border-top: 1px solid var(--borda); }
+  #entrar-google { width: 100%; }
+
+  /* ---------- estrutura do app ---------- */
+  .conteudo { max-width: 640px; margin: 0 auto;
+              padding: 0 16px calc(var(--altura-nav) + var(--seguro-baixo) + 24px); }
+  .pagina-topo { display: flex; flex-direction: column; gap: 14px; padding: 24px 0 16px; }
+  .pagina-topo h1, .titulo-pagina { font-family: var(--fonte-titulo); font-size: 34px; font-weight: 700; line-height: 1; }
+
+  .tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr)); height: calc(var(--altura-nav) + var(--seguro-baixo));
+            padding-bottom: var(--seguro-baixo); background: var(--nav); border-top: 1px solid var(--borda-suave); }
+  .tabbar .marca { display: none; }
+  .nav-botao { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+               background: transparent; border: 0; color: var(--suave); font-size: 12px; font-weight: 600; padding: 0; }
+  .nav-botao .pilula { display: grid; place-items: center; width: 52px; height: 30px; border-radius: 15px; }
+  .nav-botao[aria-current="page"] { color: var(--destaque); font-weight: 700; }
+  .nav-botao[aria-current="page"] .pilula { background: var(--destaque-fundo); }
+
+  .conta { position: relative; flex: none; }
+  .avatar { width: 44px; height: 44px; border-radius: 22px; background: var(--superficie-2); border: 1px solid var(--borda);
+            font-weight: 700; font-size: 15px; }
+  .menu-conta { position: absolute; right: 0; top: 52px; z-index: 30; width: 240px; padding: 12px;
+                display: flex; flex-direction: column; gap: 10px; background: var(--superficie-2); border: 1px solid var(--borda);
+                border-radius: var(--raio); box-shadow: 0 12px 32px rgba(0,0,0,.5); }
+  .menu-conta small { color: var(--suave); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ---------- hoje ---------- */
+  .topo-dia { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 0 16px; }
+  .seletor-dia { display: flex; align-items: center; gap: 4px; min-width: 0; }
+  .seletor-dia div { min-width: 132px; text-align: center; }
+  .seletor-dia h1 { font-family: var(--fonte-titulo); font-size: 34px; font-weight: 700; line-height: 1; }
+  .dia-cartao { padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+  .dia-cartao h2 { font-family: var(--fonte-titulo); font-size: 26px; font-weight: 700; line-height: 1.1; }
+  .dia-cartao .linha-topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .feito-em { display: flex; align-items: center; gap: 8px; color: var(--ok); font-weight: 600; font-size: 14px; margin-top: 4px; }
+  .voltar-pendente { margin-bottom: 12px; }
+
+  .passos { list-style: none; margin: 0; padding: 4px 16px; }
+  .passo { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; padding: 14px 0; }
+  .passo + .passo { border-top: 1px solid var(--borda-suave); }
+  .passo-min { align-self: start; text-align: center; padding: 4px 0; border-radius: 10px; background: var(--superficie-2);
+               font-size: 18px; font-weight: 700; color: var(--texto); }
+  .passo.passivo .passo-min { background: transparent; border: 1px dashed var(--borda-forte); color: var(--texto-2); }
+  .passo b { display: block; font-weight: 600; }
+  .passo p { color: var(--texto-2); font-size: 15px; }
+  .passo small { display: block; margin-top: 6px; color: var(--suave); font-size: 13px; }
+
+  .vocab { list-style: none; margin: 0; padding: 4px 16px; }
+  .vocab li { display: flex; flex-direction: column; padding: 10px 0; overflow-wrap: anywhere; }
+  .vocab li + li { border-top: 1px solid var(--borda-suave); }
+  .vocab b { font-weight: 600; }
+  .vocab span { color: var(--suave); font-size: 14px; }
+
+  .acao-dia { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .concluida { padding: 32px 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+  .concluida .selo-ok { width: 72px; height: 72px; border-radius: 36px; background: var(--ok); color: var(--bg); display: grid; place-items: center; }
+  .concluida h1 { font-family: var(--fonte-titulo); font-size: 34px; font-weight: 700; line-height: 1; }
+
+  /* ---------- roteiro ---------- */
+  .lista-semanas { display: flex; flex-direction: column; gap: 12px; }
+  .semana-card { width: 100%; text-align: left; padding: 16px; display: flex; flex-direction: column; gap: 4px; color: var(--texto); }
+  .semana-card:hover { border-color: var(--borda-forte); }
+  .semana-card[aria-current="true"] { border-color: var(--destaque); }
+  .semana-card .linha-topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .semana-card h2 { font-family: var(--fonte-titulo); font-size: 26px; font-weight: 700; line-height: 1.1; }
+  .semana-card p { color: var(--suave); font-size: 14px; }
+
+  .topo-semana { display: flex; align-items: flex-start; gap: 8px; padding: 20px 0 16px; }
+  .topo-semana h1 { font-family: var(--fonte-titulo); font-size: 30px; font-weight: 700; line-height: 1.05; }
+  .topo-semana .icone { margin-left: -10px; }
+  .bloco { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .bloco h3 { font-family: var(--fonte-titulo); font-size: 22px; font-weight: 700; line-height: 1.1; }
+  .bloco p { color: var(--texto-2); font-size: 15px; }
+  .exemplos { list-style: none; margin: 4px 0 0; padding: 12px 14px; border-radius: var(--raio-p); background: var(--superficie-2);
+              display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
+  .lista-texto { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; color: var(--texto-2); font-size: 15px; }
+  .lista-texto small { color: var(--suave); }
+
+  .dias { list-style: none; margin: 0; padding: 0 8px 0 4px; }
+  .dias li { display: flex; align-items: center; min-height: 56px; }
+  .dias li + li { border-top: 1px solid var(--borda-suave); }
+  .marcar { width: 44px; height: 44px; flex: none; padding: 0; border: 0; background: transparent; display: grid; place-items: center; color: transparent; }
+  .marcar i { width: 26px; height: 26px; border-radius: 13px; border: 2px solid var(--borda-forte); display: grid; place-items: center; }
+  .marcar[aria-pressed="true"] i { background: var(--ok); border-color: var(--ok); color: var(--bg); }
+  .dia-abrir { flex: 1; min-width: 0; min-height: 56px; display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 4px;
+               background: transparent; border: 0; text-align: left; }
+  .dia-abrir .nome { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .dia-abrir .nome small { color: var(--suave); font-size: 13px; font-weight: 600; }
+  .dia-abrir .num-fonte { color: var(--suave); font-size: 16px; font-weight: 600; white-space: nowrap; }
+  .dias li.feito .dia-abrir .nome span { color: var(--suave); }
+  .dias li[aria-current="step"] .dia-abrir .nome span { color: var(--destaque); font-weight: 600; }
+
+  /* ---------- progresso ---------- */
+  .barras-cat { list-style: none; margin: 0; padding: 6px 16px; }
+  .barras-cat li { padding: 12px 0; }
+  .barras-cat li + li { border-top: 1px solid var(--borda-suave); }
+  .linha-cat { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .linha-cat .num-fonte { font-size: 18px; font-weight: 700; white-space: nowrap; }
+
+  #aviso { position: fixed; left: 50%; bottom: calc(var(--altura-nav) + var(--seguro-baixo) + 16px); z-index: 40;
+           transform: translate(-50%, 30px); opacity: 0; pointer-events: none;
+           background: var(--ok); color: var(--bg); font-weight: 600; padding: 12px 18px; border-radius: 12px;
+           transition: transform .25s, opacity .25s; max-width: calc(100% - 32px); box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+  #aviso.visivel { transform: translate(-50%, 0); opacity: 1; }
+  #aviso.erro { background: var(--erro); color: var(--texto); }
+
+  /* ---------- desktop / tablet ---------- */
+  @media (min-width: 960px) {
+    #tela-app { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+    #tela-app[hidden] { display: none !important; }
+    .tabbar { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 4px;
+              padding: 24px 16px; background: var(--lateral); border-top: 0; border-right: 1px solid var(--lateral-borda); }
+    .tabbar .marca { display: flex; padding: 0 8px; margin-bottom: 24px; }
+    .tabbar .marca-icone { width: 36px; height: 36px; border-radius: 10px; }
+    .tabbar .marca-nome { font-size: 24px; }
+    .nav-botao { flex-direction: row; justify-content: flex-start; gap: 12px;
+                 height: 44px; padding: 0 12px; border-radius: var(--raio-p); font-size: 15px; color: var(--texto-2); }
+    .nav-botao .pilula { width: auto; height: auto; background: none !important; }
+    .nav-botao:hover { background: var(--superficie); }
+    .nav-botao[aria-current="page"] { background: var(--destaque-fundo); }
+    .conteudo { max-width: 1120px; padding: 12px 40px 48px; margin: 0; width: 100%; }
+    .topo-dia, .topo-semana { padding-top: 28px; }
+    .hoje-layout, .semana-layout { display: grid; grid-template-columns: minmax(0, 3fr) minmax(300px, 2fr); gap: 0 24px; align-items: start; }
+    .hoje-layout .grupo-titulo:first-child, .semana-layout .grupo-titulo:first-child { margin-top: 20px; }
+    .acao-dia { max-width: 420px; }
+    .lista-semanas { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+    .resumo { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .topo-vocab { display: grid; grid-template-columns: auto minmax(0, 360px); align-items: center; column-gap: 24px; }
+    .topo-vocab .chips { grid-column: 1 / -1; }
+    .chips.rolavel { flex-wrap: wrap; margin: 0; padding: 0; }
+    .lista-vocab { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; align-items: start; }
+    .lista-progresso { max-width: 760px; }
+    #aviso { bottom: 32px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<main>
+  <!-- ============ LOGIN ============ -->
+  <section id="tela-login" class="login" hidden>
+    <div class="login-caixa">
+      <div class="marca">
+        <span class="marca-icone"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H10l-6 4z"/><path d="M8 9h8M8 12h5"/></svg></span>
+        <span class="marca-nome">Meu Inglês</span>
+      </div>
+      <form id="form-login" class="cartao">
+        <h2>Entrar</h2>
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <input id="senha" type="password" minlength="6" autocomplete="current-password" required>
+        </div>
+        <button class="botao primario grande" type="submit">Entrar</button>
+        <div class="ou">ou</div>
+        <button id="entrar-google" class="botao" type="button">Entrar com Google</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ APP ============ -->
+  <section id="tela-app" hidden>
+    <nav class="tabbar" aria-label="Principal">
+      <div class="marca">
+        <span class="marca-icone"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H10l-6 4z"/><path d="M8 9h8M8 12h5"/></svg></span>
+        <span class="marca-nome">Meu Inglês</span>
+      </div>
+      <button class="nav-botao" data-aba="hoje" type="button">
+        <span class="pilula"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg></span>Hoje</button>
+      <button class="nav-botao" data-aba="roteiro" type="button">
+        <span class="pilula"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg></span>Roteiro</button>
+      <button class="nav-botao" data-aba="vocabulario" type="button">
+        <span class="pilula"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14v16H5z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span>Vocabulário</button>
+      <button class="nav-botao" data-aba="progresso" type="button">
+        <span class="pilula"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span>Progresso</button>
+    </nav>
+
+    <div class="conteudo">
+      <!-- Hoje -->
+      <section id="aba-hoje" class="aba">
+        <header class="topo-dia">
+          <div class="seletor-dia">
+            <button class="icone" type="button" data-mudar-dia="-1" aria-label="Dia anterior">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+            <div>
+              <span class="sobretitulo" id="hoje-semana"></span>
+              <h1 id="hoje-dia"></h1>
+            </div>
+            <button class="icone" type="button" data-mudar-dia="1" aria-label="Próximo dia">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+          </div>
+          <div class="conta">
+            <button id="avatar" class="avatar" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Conta"></button>
+            <div id="menu-conta" class="menu-conta" hidden>
+              <small id="usuario"></small>
+              <button id="sair" class="botao" type="button">Sair</button>
+            </div>
+          </div>
+        </header>
+        <div id="hoje-corpo"></div>
+      </section>
+
+      <!-- Roteiro -->
+      <section id="aba-roteiro" class="aba" hidden>
+        <div id="roteiro-lista">
+          <header class="pagina-topo">
+            <h1>Roteiro</h1>
+          </header>
+          <div id="lista-semanas" class="lista-semanas"></div>
+        </div>
+        <div id="roteiro-semana" hidden></div>
+      </section>
+
+      <!-- Vocabulário -->
+      <section id="aba-vocabulario" class="aba" hidden>
+        <header class="pagina-topo topo-vocab">
+          <h1>Vocabulário</h1>
+          <div class="busca">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="busca-vocab" type="search" placeholder="Buscar em inglês ou português" aria-label="Buscar palavra">
+          </div>
+          <div id="chips-vocab" class="chips rolavel" role="group" aria-label="Semana"></div>
+        </header>
+        <div id="lista-vocab" class="lista-vocab"></div>
+      </section>
+
+      <!-- Progresso -->
+      <section id="aba-progresso" class="aba" hidden>
+        <header class="pagina-topo">
+          <h1>Progresso</h1>
+        </header>
+        <div id="resumo-progresso" class="resumo"></div>
+        <h2 class="sobretitulo grupo-titulo">Por semana</h2>
+        <div id="lista-progresso" class="lista-progresso"></div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<div id="aviso" role="status"></div>
+
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+  // ================================================================
+  //  CONFIGURAÇÃO — mesmo projeto Supabase do gym e do account, schema "english"
+  //  (painel do projeto → botão "Connect" ou Project Settings → API)
+  // ================================================================
+  const SUPABASE_URL = 'https://aqymnknfwjiyhqzwyuas.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_Io1jQve-Tf8JA0BTiyxOwg_j2C1McYY';   // chave "publishable" (pública por design)
+  const SCHEMA = 'english';
+  // ================================================================
+
+  const $ = (seletor) => document.querySelector(seletor);
+  const $$ = (seletor) => document.querySelectorAll(seletor);
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, { db: { schema: SCHEMA } });
+
+  // ---------- utilidades ----------
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  function isoLocal(d) {
+    const c = new Date(d);
+    c.setMinutes(c.getMinutes() - c.getTimezoneOffset());
+    return c.toISOString().slice(0, 10);
+  }
+  const hoje = () => isoLocal(new Date());
+  const DIAS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+  const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const dataDeIso = (iso) => { const [a, m, d] = iso.split('-').map(Number); return new Date(a, m - 1, d); };
+  // "qui, 5 nov" (com o ano quando não é o ano atual)
+  function fmtDia(iso) {
+    const d = dataDeIso(iso);
+    const ano = d.getFullYear() !== new Date().getFullYear() ? ` ${d.getFullYear()}` : '';
+    return `${DIAS[d.getDay()]}, ${d.getDate()} ${MESES[d.getMonth()]}${ano}`;
+  }
+  const doisDigitos = (n) => String(n).padStart(2, '0');
+  const normalizar = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+  const svg = (d, extra = '') =>
+    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${d}</svg>`;
+  const ICONE = {
+    voltar: svg('<path d="M15 6l-6 6 6 6"/>', 'stroke-width="2.4"'),
+    check: svg('<path d="M5 12l5 5 9-10"/>', 'stroke-width="2.8"'),
+    checkP: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>',
+    checkG: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>',
+  };
+
+  let timerAviso;
+  function aviso(msg, erro = false) {
+    const t = $('#aviso');
+    t.textContent = msg;
+    t.className = erro ? 'erro visivel' : 'visivel';
+    clearTimeout(timerAviso);
+    timerAviso = setTimeout(() => { t.className = ''; }, 3500);
+  }
+
+  // ---------- conteúdo do roteiro ----------
+  // O conteúdo das semanas é fixo e fica aqui no código; o banco guarda só o progresso.
+  // Cada semana: t (tema), s (subtítulo), goal (meta), gram { t, x, e } (gramática: título, explicação, exemplos),
+  // pron (dicção), micro (micro-hábito), v (6 grupos de vocabulário: [nome, 'termo|tradução;…'], um por dia de seg a sáb),
+  // res (recursos: [nome, tipo, como usar]), cont (conteúdos para o barril), d (bloco de 20 min de seg a sáb: [o que fazer, recurso])
+  // e check (teste de domingo). Este bloco usa aspas duplas e crases porque o texto em inglês tem apóstrofos.
+  const DIAS_ROTEIRO = ["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
+  const BLOCOS = ["Chorusing + shadowing","Vídeo interativo + sentence mining","Escrita com correção de IA","Roleplay por voz","Trilha de entrevista","Leitura ativa + mining","Revisão + curadoria"];
+  const TEMPOS_MORTOS = [
+   ["Podcast ou vídeo tech do barril (pasta 01_TECH)","Syntax, Web Dev Simplified, freeCodeCamp"],
+   ["Vídeos tech ou um episódio de série com legenda em inglês","Pasta 07_REASSISTIR ou Netflix"],
+   ["Desenvolvimento pessoal em áudio","Atomic Habits (audiobook), Ali Abdaal, Matt D'Avella"],
+   ["Tênis: aula de técnica ou melhores momentos com narração","Feel Tennis, Intuitive Tennis, Tennis TV"],
+   ["Escolha livre do barril; reouça algo desta semana","Qualquer pasta, nível Fácil ou Alvo"],
+   ["Série ou filme sem pressão, legenda em inglês","Netflix ou Prime com perfil em inglês"],
+   ["Maratona leve: o que você mais gostou na semana","Barril, itens já vistos"]
+  ];
+
+  const SEMANAS = [
+  {t:"Quem sou eu: apresentação e rotina",s:"Falar de você, do seu trabalho e do seu dia a dia",
+   goal:"Responder a “Tell me about yourself” em 60 a 90 segundos sem ler.",
+   gram:{t:"Present simple × present continuous",x:"Use o present simple para rotina e fatos (o que você faz sempre). Use o present continuous para o que está acontecendo agora ou neste período da vida.",e:["I work as a software developer. (fato)","I'm working on a payments project these days. (período atual)","I usually play tennis on Saturdays.","I'm learning English to work abroad."]},
+   pron:"Contrações: I'm, I've, I'd, don't. Fale junto, sem separar as palavras.",
+   micro:"Ao escovar os dentes, narre seu plano do dia: “First I'm gonna…”.",
+   v:[["Apresentação",`introduce myself|me apresentar;background|formação, histórico;currently|atualmente;based in|morando em;originally from|natural de;role|cargo, função;field|área de atuação;hometown|cidade natal;in my thirties|na casa dos 30;native speaker|falante nativo;nickname|apelido;go by|ser chamado de`],
+   ["Rotina diária",`wake up|acordar;get ready|se arrumar;commute|ir ao trabalho, deslocamento;work from home|trabalhar de casa;take a break|fazer uma pausa;have lunch|almoçar;run errands|resolver coisas na rua;work out|malhar;wind down|desacelerar;go to bed|ir dormir;sleep in|dormir até tarde;stay up late|ficar acordado até tarde`],
+   ["Frequência e tempo",`usually|normalmente;often|com frequência;rarely|raramente;hardly ever|quase nunca;every other day|dia sim, dia não;once in a while|de vez em quando;these days|hoje em dia;at the moment|no momento;on weekdays|em dias úteis;on weekends|nos fins de semana;from time to time|de tempos em tempos;twice a week|duas vezes por semana`],
+   ["Trabalho e estudo",`full-time|tempo integral;part-time|meio período;freelance|autônomo;self-taught|autodidata;degree|diploma, graduação;major in|me formar em;software developer|desenvolvedor de software;team|equipe;coworker|colega de trabalho;schedule|agenda, horário;deadline|prazo;workload|carga de trabalho`],
+   ["Hobbies e interesses",`be into|curtir;keen on|gostar muito de;spare time|tempo livre;hobby|passatempo;take up|começar (um hobby);play tennis|jogar tênis;hang out|passar tempo com alguém;binge-watch|maratonar;side project|projeto paralelo;passionate about|apaixonado por;get better at|melhorar em;give it a try|experimentar`],
+   ["Chunks de conversa",`nice to meet you|prazer em conhecer;how's it going?|como vai?;what do you do?|o que você faz (trabalho)?;I work as|trabalho como;I'm in charge of|sou responsável por;to be honest|para ser sincero;as for me|quanto a mim;that makes sense|faz sentido;sounds good|parece bom;I see|entendi;by the way|aliás;let me think|deixa eu pensar`]],
+   res:[["Rachel's English","yt","Busque “introduce yourself” e “contractions”. Use na segunda."],["BBC Learning English: 6 Minute English","pod","Episódios curtos com transcrição. Bom para tempos mortos."],["Google Interview Warmup","web","Treine “Tell me about yourself” na sexta."],["Web Dev Simplified","yt","Fala clara; ouça como ele se apresenta no início dos vídeos."]],
+   cont:["Vídeos “day in the life of a software engineer”","Páginas About de sites pessoais de desenvolvedores","Um episódio de The Office (US) com legenda em inglês"],
+   d:[["Fale junto com 1 minuto de um vídeo de apresentação pessoal: 5 min em coro, 15 min com meio segundo de atraso. Grave a última tentativa.","Rachel's English, vídeo “introduce yourself”"],
+   ["Reassista um vídeo “day in the life”. Pause a cada cena e descreva em voz alta o que a pessoa faz e o que está fazendo agora. Minere 5 frases.","YouTube: “day in the life software engineer”"],
+   ["Escreva 150 palavras: quem você é, o que faz e como é um dia típico seu. Corrija com o prompt de escrita e reescreva.","ChatGPT ou Claude + prompt de escrita do plano"],
+   ["Simule o primeiro dia em uma empresa nova: apresente-se a um colega e faça 5 perguntas sobre ele.","Modo de voz do ChatGPT ou Claude"],
+   ["Grave “Tell me about yourself” em 60 a 90 s: presente, passado, futuro. Ouça e regrave uma vez.","Gravador do celular + Google Interview Warmup"],
+   ["Leia 3 páginas About de desenvolvedores. Leia um parágrafo em voz alta e minere 5 a 10 frases.","Sites pessoais ou perfis do GitHub"]],
+   check:"Você consegue se apresentar por 1 minuto sem pausa longa?"},
+
+  {t:"Meu dia como dev: tarefas, ferramentas e standup",s:"Contar o que fez ontem, o que fará hoje e o que está travando",
+   goal:"Dar um update de standup de 45 segundos: yesterday, today, blockers.",
+   gram:{t:"Past simple + going to",x:"O standup tem formato fixo. Past simple para o que você terminou ontem; going to (ou present continuous) para o plano de hoje.",e:["Yesterday I fixed the login bug and opened a pull request.","Today I'm going to write the tests.","I didn't finish the migration, so I'm picking it up again today.","I ran into an issue with the staging environment."]},
+   pron:"Final -ed: worked /t/, deployed /d/, tested /ɪd/. Só o terceiro ganha sílaba extra.",
+   micro:"Ao abrir a IDE, diga em voz alta o que vai fazer: “I'm going to refactor this because…”.",
+   v:[["Standup",`standup|reunião diária;yesterday I worked on|ontem trabalhei em;today I'm going to|hoje vou;blocker|impedimento;be stuck on|estar travado em;follow up|dar seguimento;sync|alinhar rapidamente;update|atualização;in progress|em andamento;done|concluído;pick up a ticket|pegar uma tarefa;wrap up|finalizar`],
+   ["Git e código",`commit|registrar alterações;branch|ramificação;merge|mesclar;pull request|pedido de merge;push|enviar o código;rebase|reorganizar commits;conflict|conflito;repository|repositório;codebase|base de código;review|revisar;revert|reverter;stash|guardar mudanças temporariamente`],
+   ["Tarefas e planejamento",`ticket|chamado, tarefa;backlog|lista de pendências;sprint|ciclo de trabalho;estimate|estimar;assign|atribuir;prioritize|priorizar;scope|escopo;requirement|requisito;feature|funcionalidade;task|tarefa;milestone|marco;due date|data de entrega`],
+   ["Verbos do dia a dia",`build|construir;fix|corrigir;test|testar;deploy|implantar;ship|entregar, lançar;refactor|refatorar;implement|implementar;debug|depurar;set up|configurar;look into|investigar;figure out|descobrir, resolver;run|executar`],
+   ["Ferramentas e ambiente",`environment|ambiente;staging|homologação;production|produção;pipeline|esteira de entrega;the build|a compilação;dependency|dependência;library|biblioteca;framework|estrutura base;database|banco de dados;server|servidor;log|registro;dashboard|painel`],
+   ["Chunks de standup",`I'm working on|estou trabalhando em;I'm almost done|estou quase terminando;it's taking longer than expected|está demorando mais que o esperado;I ran into an issue|me deparei com um problema;no blockers|sem impedimentos;I'll keep you posted|te mantenho informado;can you take a look?|pode dar uma olhada?;I need a hand with|preciso de ajuda com;let's take it offline|vamos falar disso depois;on track|dentro do previsto;behind schedule|atrasado;ahead of schedule|adiantado`]],
+   res:[["Rachel's English","yt","Busque “ED endings” para a pronúncia do passado."],["Syntax","pod","Dois devs conversando: ouça os verbos do dia a dia em contexto."],["Web Dev Simplified","yt","Tutoriais de Git com fala pausada."],["GitHub Docs","web","Leia em inglês as páginas sobre pull requests."]],
+   cont:["Vídeos “daily standup meeting example”","Tutoriais de Git para iniciantes (você já sabe o conteúdo, então foque no inglês)","Mensagens de commit e PRs de projetos open source que você usa"],
+   d:[["Shadowing de 1 a 2 minutos de um tutorial de Git. Marque todos os verbos em -ed e capriche no som final.","Web Dev Simplified, vídeo de Git"],
+   ["Reassista um exemplo de standup. Pause depois de cada pessoa e dê o seu próprio update no lugar dela. Minere 5 frases.","YouTube: “daily standup meeting example”"],
+   ["Escreva seu standup real de 3 dias desta semana (ontem, hoje, impedimentos). Corrija com a IA.","ChatGPT ou Claude + prompt de escrita"],
+   ["Roleplay de daily standup: a IA é o tech lead e faz perguntas de seguimento sobre suas tarefas.","Modo de voz do ChatGPT ou Claude"],
+   ["Grave a resposta para “Walk me through a typical day at your job” em 90 s.","Gravador do celular"],
+   ["Leia a descrição e os comentários de 2 pull requests de um projeto open source. Minere 5 a 10 frases.","GitHub, repositório de uma biblioteca que você usa"]],
+   check:"Você consegue dar seu standup de hoje em 45 segundos?"},
+
+  {t:"Minha trajetória: experiência e projetos",s:"Contar sua história profissional com resultados",
+   goal:"Descrever sua carreira e um projeto em 2 minutos, com um número de impacto.",
+   gram:{t:"Present perfect × past simple",x:"Present perfect para experiência sem data definida ou algo que continua até hoje (for, since). Past simple quando há um momento terminado (in 2022, last year).",e:["I've worked with React for four years.","I've been a developer since 2020.","I joined my current company in 2022.","Have you ever led a project? Yes, I led one last year."]},
+   pron:"Formas fracas: I've /aɪv/, have /əv/, for /fər/. Não pronuncie “have” inteiro no meio da frase.",
+   micro:"No banho, conte em voz alta um projeto antigo em 3 frases: o que era, o que você fez, o resultado.",
+   v:[["Carreira",`career path|trajetória profissional;experience|experiência;position|cargo;promotion|promoção;get promoted|ser promovido;internship|estágio;junior|júnior;senior|sênior;lead|líder técnico;hire|contratar;quit|pedir demissão;lay off|demitir por corte`],
+   ["Expressões de tempo",`for three years|por três anos;since 2021|desde 2021;so far|até agora;recently|recentemente;lately|ultimamente;ever|alguma vez;never|nunca;already|já;yet|ainda, já;just|acabou de;over the past year|ao longo do último ano;back then|naquela época`],
+   ["Projetos",`project|projeto;launch|lançar;from scratch|do zero;end-to-end|de ponta a ponta;ownership|responsabilidade de dono;contribute to|contribuir para;maintain|manter;migrate|migrar;legacy code|código legado;stakeholder|parte interessada;client|cliente;user base|base de usuários`],
+   ["Conquistas",`achievement|conquista;improve|melhorar;reduce|reduzir;increase|aumentar;by 30 percent|em 30 por cento;performance|desempenho;outcome|resultado;impact|impacto;proud of|orgulhoso de;accomplish|realizar;deliver|entregar;succeed in|ter sucesso em`],
+   ["Habilidades",`skill|habilidade;strength|ponto forte;weakness|ponto fraco;hands-on|mão na massa;proficient in|proficiente em;familiar with|familiarizado com;background in|experiência em;tech stack|conjunto de tecnologias;front-end|interface, lado do cliente;back-end|lado do servidor;full-stack|as duas pontas;soft skills|habilidades interpessoais`],
+   ["Chunks de história",`I've been working as|venho trabalhando como;I've worked with|já trabalhei com;I was responsible for|eu era responsável por;I started out as|comecei como;I moved on to|passei para;what I enjoyed most was|o que mais gostei foi;I learned a lot about|aprendi muito sobre;that's when I|foi quando eu;over time|com o tempo;long story short|resumindo;at that point|naquele momento;ever since|desde então`]],
+   res:[["A Life Engineered","yt","Histórias de carreira em tech contadas com clareza."],["Soft Skills Engineering","pod","Perguntas reais de devs sobre carreira."],["Exponent","yt","Mocks gravados: ouça como candidatos descrevem projetos."],["LinkedIn","web","Leia perfis em inglês de devs da sua área e copie estruturas."]],
+   cont:["Entrevistas com engenheiros contando a própria trajetória","Seção About e Experience de perfis no LinkedIn","Posts “how I became a software engineer”"],
+   d:[["Shadowing de 1 a 2 minutos de alguém contando a carreira. Foque em I've e nas formas fracas.","A Life Engineered, qualquer vídeo de carreira"],
+   ["Reassista um mock de entrevista. Pause em cada pergunta sobre experiência e responda você antes do candidato. Minere 5 frases.","Exponent: “software engineer mock interview”"],
+   ["Escreva a seção Experience do seu LinkedIn em inglês: 3 tópicos por cargo, cada um com verbo de ação e resultado.","ChatGPT ou Claude + prompt de escrita"],
+   ["Roleplay: um recrutador pergunta sobre cada item do seu currículo. Responda com present perfect e past simple.","Modo de voz do ChatGPT ou Claude"],
+   ["Escreva em tópicos e grave sua 1ª história STAR: o projeto de que mais se orgulha (90 a 120 s).","Banco de histórias STAR do plano"],
+   ["Leia um post de carreira de um engenheiro. Leia um parágrafo em voz alta e minere 5 a 10 frases.","The Pragmatic Engineer ou blog pessoal de um dev"]],
+   check:"Você consegue contar sua carreira em 2 minutos com datas e um resultado em número?"},
+
+  {t:"Reuniões e colaboração",s:"Opinar, concordar, discordar e pedir esclarecimento com educação",
+   goal:"Participar de uma reunião simulada dando 3 opiniões e discordando uma vez sem travar.",
+   gram:{t:"Modais para sugerir e opinar",x:"Should para recomendação forte, could para possibilidade, might para incerteza, would para suavizar. Depois do modal, verbo sem to.",e:["We should add tests before merging.","We could split this into two tickets.","That might break the mobile layout.","I'd go with the simpler option."]},
+   pron:"Entonação educada: a voz sobe e desce em “I see what you mean, but…”. Tom plano soa ríspido.",
+   micro:"Ao ouvir um podcast, pause uma vez e responda em voz alta: “I agree because…” ou “I see it differently…”.",
+   v:[["Reuniões",`meeting|reunião;agenda|pauta;call|chamada;schedule a meeting|agendar uma reunião;reschedule|remarcar;join|entrar;mute|silenciar;share my screen|compartilhar a tela;take notes|anotar;action item|tarefa combinada;follow-up|acompanhamento;recap|resumo`],
+   ["Dar opinião",`in my opinion|na minha opinião;I think|eu acho;I feel like|tenho a impressão de que;from my point of view|do meu ponto de vista;as far as I know|até onde eu sei;I'd say|eu diria;it seems to me|me parece;personally|pessoalmente;I believe|acredito;if you ask me|se quer saber minha opinião;the way I see it|do jeito que eu vejo;I'm not sure, but|não tenho certeza, mas`],
+   ["Concordar e discordar",`I agree|concordo;exactly|exatamente;good point|bom ponto;fair enough|justo;I see what you mean|entendo o que quer dizer;I'm not so sure|não tenho tanta certeza;I see it differently|vejo de outra forma;I'd push back on that|eu questionaria isso;that said|dito isso;on the other hand|por outro lado;I disagree|discordo;you might be right|talvez você tenha razão`],
+   ["Sugerir",`suggest|sugerir;propose|propor;how about|que tal;why don't we|por que não;we could|poderíamos;we should|deveríamos;it might be better to|talvez seja melhor;what if|e se;alternatively|como alternativa;my suggestion is|minha sugestão é;let's try|vamos tentar;consider|considerar`],
+   ["Esclarecer",`clarify|esclarecer;could you repeat that?|pode repetir?;what do you mean by|o que você quer dizer com;just to confirm|só para confirmar;in other words|em outras palavras;to sum up|resumindo;let me rephrase|deixa eu reformular;does that make sense?|faz sentido?;I didn't catch that|não peguei isso;could you elaborate?|pode detalhar?;so you're saying|então você está dizendo;got it|entendi`],
+   ["Colaboração",`teamwork|trabalho em equipe;collaborate|colaborar;align|alinhar;on the same page|alinhados;hand over|passar uma tarefa;reach out|entrar em contato;loop in|incluir alguém na conversa;feedback|retorno, avaliação;brainstorm|gerar ideias;pair programming|programação em par;cross-functional|multifuncional;heads-up|aviso antecipado`]],
+   res:[["Soft Skills Engineering","pod","Dilemas de equipe: muita linguagem de opinião e discordância educada."],["BBC Learning English","yt","Busque “English at work” e “agreeing and disagreeing”."],["Syntax","pod","Dois hosts que discordam com leveza o tempo todo."],["Accent's Way English with Hadar","yt","Busque “intonation” para soar educado."]],
+   cont:["Vídeos de reuniões de equipe e retrospectivas gravadas","Debates leves entre devs: tabs vs spaces, monolith vs microservices","Um episódio de Silicon Valley (cenas de reunião)"],
+   d:[["Shadowing de 1 a 2 minutos de um diálogo com discordância educada. Copie a melodia da voz.","BBC Learning English: “agreeing and disagreeing”"],
+   ["Reassista um debate tech. Pause depois de cada argumento e diga se concorda e por quê. Minere 5 frases.","Syntax ou vídeo de debate entre devs"],
+   ["Escreva 150 palavras defendendo uma opinião técnica sua e 2 frases reconhecendo o outro lado.","ChatGPT ou Claude + prompt de escrita"],
+   ["Roleplay de reunião de planejamento: a IA propõe uma solução ruim e você discorda com educação e sugere outra.","Modo de voz do ChatGPT ou Claude"],
+   ["Escreva e grave a 2ª história STAR: uma discordância com colega ou PM.","Banco de histórias STAR do plano"],
+   ["Leia uma discussão longa em uma issue ou RFC de um projeto open source. Minere 5 a 10 frases de opinião.","GitHub: issues com muitos comentários"]],
+   check:"Você consegue discordar de alguém em inglês sem soar rude e sem travar?"},
+
+  {t:"Explicando problemas técnicos",s:"Descrever um bug, a causa e a correção para qualquer pessoa",
+   goal:"Explicar um bug real em 90 segundos: sintoma, causa raiz, correção, prevenção.",
+   gram:{t:"Voz passiva",x:"Use quando o foco é o que aconteceu, não quem fez. Verbo to be + particípio. Muito comum em relatos de incidente.",e:["The bug was caused by a missing null check.","The fix has been deployed to production.","The data is cached for ten minutes.","The service was restarted twice last night."]},
+   pron:"Sílaba tônica em termos técnicos: deVELop, DAtabase, perFORmance, aNAlysis, ARchitecture.",
+   micro:"Quando um erro aparecer no terminal, leia a mensagem em voz alta e explique em uma frase: “It failed because…”.",
+   v:[["Problemas",`bug|erro no código;issue|problema;error|erro;crash|travar, cair;failure|falha;outage|indisponibilidade;glitch|falha pequena;edge case|caso extremo;regression|regressão;flaky|instável;broken|quebrado;unexpected behavior|comportamento inesperado`],
+   ["Investigar",`reproduce|reproduzir;root cause|causa raiz;stack trace|rastro de pilha;breakpoint|ponto de parada;narrow down|afunilar;rule out|descartar;track down|rastrear;troubleshoot|diagnosticar;inspect|inspecionar;monitor|monitorar;alert|alerta;symptom|sintoma`],
+   ["Resolver",`workaround|solução de contorno;hotfix|correção urgente;patch|correção pontual;roll back|voltar à versão anterior;restart|reiniciar;resolve|resolver;mitigate|mitigar;prevent|prevenir;handle|tratar;validate|validar;cover with tests|cobrir com testes;release|versão, lançar`],
+   ["Causa e efeito",`because of|por causa de;due to|devido a;cause|causar;lead to|levar a;result in|resultar em;trigger|disparar;turn out|acabar sendo;as a result|como resultado;that's why|é por isso que;so that|para que;affect|afetar;depend on|depender de`],
+   ["Performance",`slow|lento;latency|latência;timeout|tempo esgotado;memory leak|vazamento de memória;bottleneck|gargalo;load|carga;cache|armazenamento temporário;query|consulta;request|requisição;response|resposta;throughput|vazão;scale|escalar`],
+   ["Chunks de explicação",`it turned out that|acabou que;the problem was caused by|o problema foi causado por;it has been fixed|foi corrigido;it works on my machine|funciona na minha máquina;I can't reproduce it|não consigo reproduzir;it only happens when|só acontece quando;my first guess is|meu primeiro palpite é;let me walk you through it|deixa eu te explicar passo a passo;we're looking into it|estamos investigando;it should be fine now|deve estar ok agora;step by step|passo a passo;as far as I can tell|pelo que consigo ver`]],
+   res:[["ByteByteGo","yt","Explicações técnicas curtas e claras para shadowing."],["Fireship","yt","Nível Desafio: fala rápida. Use com legenda e a 0.75x."],["Engineering blogs: postmortems","web","Busque “postmortem” nos blogs da Cloudflare, GitHub ou Stripe."],["YouGlish","web","Ouça a tônica de cada termo técnico em vídeos reais."]],
+   cont:["Relatos de incidente (postmortems) de empresas de tecnologia","Vídeos de debugging ao vivo","Perguntas e respostas bem votadas no Stack Overflow"],
+   d:[["Shadowing de 1 a 2 minutos de uma explicação técnica. Antes, confira no YouGlish a tônica de 5 termos.","ByteByteGo + YouGlish"],
+   ["Reassista um vídeo de debugging. Pause antes de cada descoberta e diga seu palpite: “My first guess is…”. Minere 5 frases.","YouTube: “debugging session” da sua linguagem"],
+   ["Escreva um mini postmortem de um bug que você resolveu: resumo, impacto, causa raiz, correção, prevenção. Use 4 passivas.","ChatGPT ou Claude + prompt de escrita"],
+   ["Roleplay: explique um bug a um gerente de produto que não programa. A IA faz perguntas de leigo.","Modo de voz do ChatGPT ou Claude"],
+   ["Escreva e grave a 3ª história STAR: um bug ou incidente difícil.","Banco de histórias STAR do plano"],
+   ["Leia um postmortem público. Leia o resumo em voz alta e minere 5 a 10 frases, de preferência na passiva.","Blog de engenharia da Cloudflare ou do GitHub"]],
+   check:"Você consegue explicar um bug para alguém que não programa?"},
+
+  {t:"Tênis e esportes",s:"Descrever jogos, comparar jogadores e falar do seu treino",
+   goal:"Conversar 3 minutos sobre tênis: seu jogo, um jogador favorito e uma partida recente.",
+   gram:{t:"Comparativos e superlativos",x:"Adjetivo curto: -er e the -est. Adjetivo longo: more e the most. Para igualdade, as … as. Reforce com much, far, slightly.",e:["His serve is faster than mine.","She's the most consistent player on tour.","My backhand isn't as good as my forehand.","Clay is much slower than grass."]},
+   pron:"Os dois sons de TH: think, three, throw (sem voz) e the, this, than (com voz). Língua entre os dentes.",
+   micro:"No treino de tênis, narre os golpes em inglês: “split step, unit turn, low to high”.",
+   v:[["Golpes",`forehand|golpe de direita;backhand|golpe de esquerda;serve|saque;volley|voleio;slice|bola cortada;topspin|efeito para a frente;drop shot|deixadinha;lob|balão;smash|cortada;return|devolução;rally|troca de bolas;footwork|trabalho de pés`],
+   ["Jogo e placar",`match|partida;set|set, parcial;game|game;point|ponto;deuce|iguais;advantage|vantagem;tie-break|desempate;break point|ponto de quebra;ace|saque indefensável;double fault|dupla falta;love|zero;unforced error|erro não forçado`],
+   ["Quadra e equipamento",`court|quadra;baseline|linha de fundo;net|rede;racket|raquete;strings|cordas;grip|empunhadura;clay|saibro;hard court|quadra dura;grass|grama;tournament|torneio;draw|chave do torneio;seed|cabeça de chave`],
+   ["Desempenho",`win|vencer;lose|perder;beat|derrotar;upset|zebra;comeback|virada;consistent|consistente;aggressive|agressivo;powerful|potente;accurate|preciso;improve my game|melhorar meu jogo;warm up|aquecer;stamina|resistência`],
+   ["Comparar",`better than|melhor que;worse than|pior que;faster|mais rápido;the best|o melhor;the most consistent|o mais consistente;as good as|tão bom quanto;much stronger|muito mais forte;slightly|ligeiramente;by far|de longe;far more|muito mais;less than|menos que;not as fast as|não tão rápido quanto`],
+   ["Chunks de conversa",`I've been playing for|jogo há;I play twice a week|jogo duas vezes por semana;my backhand needs work|meu backhand precisa melhorar;I'm working on my serve|estou treinando meu saque;who's your favorite player?|quem é seu jogador favorito?;did you watch the match?|você viu o jogo?;what a shot!|que golpe!;it was a close match|foi um jogo apertado;he came back from two sets down|ele virou depois de perder dois sets;I'm a big fan of|sou muito fã de;under pressure|sob pressão;in great shape|em ótima forma`]],
+   res:[["Feel Tennis","yt","Aulas de técnica com fala lenta e didática."],["Intuitive Tennis","yt","Análises de golpes; ótimo para vocabulário de técnica."],["Tennis TV","yt","Melhores momentos com narração em inglês."],["The Tennis Podcast","pod","Nível Desafio: inglês britânico em conversa."],["Break Point (Netflix)","tv","Série documental; use com legenda em inglês."]],
+   cont:["Aulas de forehand, saque e footwork","Melhores momentos de partidas com narração","Entrevistas pós-jogo de jogadores (frases curtas e repetitivas)"],
+   d:[["Shadowing de 1 a 2 minutos de uma aula de técnica. Marque todos os TH do trecho.","Feel Tennis, uma aula do golpe que você está treinando"],
+   ["Reassista os melhores momentos de uma partida. Pause e narre o ponto no lugar do comentarista. Minere 5 frases.","Tennis TV: highlights de um jogo que você já viu"],
+   ["Escreva 150 palavras comparando dois jogadores ou dois dos seus golpes. Use 6 comparativos.","ChatGPT ou Claude + prompt de escrita"],
+   ["Roleplay de small talk antes de uma reunião: um colega estrangeiro também joga tênis. Converse por 10 minutos.","Modo de voz do ChatGPT ou Claude"],
+   ["Grave “What do you do outside of work?” em 60 a 90 s, ligando o tênis a uma qualidade profissional.","Gravador do celular"],
+   ["Leia um artigo de análise de uma partida ou torneio. Minere 5 a 10 frases.","Site da ATP Tour ou da BBC Sport"]],
+   check:"Você consegue comentar uma partida por 2 minutos usando comparativos?"},
+
+  {t:"Hábitos, produtividade e desenvolvimento pessoal",s:"Falar de metas, rotina de estudo e como você melhora",
+   goal:"Explicar em 2 minutos um hábito que mudou sua rotina e como você o construiu.",
+   gram:{t:"Gerúndio × infinitivo",x:"Alguns verbos pedem -ing (enjoy, avoid, keep, finish). Outros pedem to + verbo (want, decide, plan, manage). Depois de preposição, sempre -ing.",e:["I enjoy learning new things.","I decided to wake up earlier.","I keep putting it off.","I'm interested in improving my focus."]},
+   pron:"Schwa /ə/, o som mais comum do inglês: to /tə/, for /fər/, of /əv/, about /əˈbaʊt/. Palavras pequenas ficam fracas.",
+   micro:"Antes de dormir, grave 60 segundos contando o que funcionou e o que não funcionou no seu dia.",
+   v:[["Hábitos",`habit|hábito;routine|rotina;build a habit|criar um hábito;break a habit|largar um hábito;stick to|manter, seguir;give up|desistir;cut down on|reduzir;consistency|constância;discipline|disciplina;willpower|força de vontade;cue|gatilho;reward|recompensa`],
+   ["Produtividade",`focus|foco;distraction|distração;procrastinate|procrastinar;get things done|fazer as coisas acontecerem;time management|gestão do tempo;deep work|trabalho focado;to-do list|lista de tarefas;priority|prioridade;multitask|fazer várias coisas ao mesmo tempo;burnout|esgotamento;efficient|eficiente;put off|adiar`],
+   ["Metas e progresso",`goal|meta;set a goal|definir uma meta;achieve|alcançar;progress|progresso;track|acompanhar;long-term|de longo prazo;short-term|de curto prazo;mindset|mentalidade;growth|crescimento;challenge|desafio;step out of my comfort zone|sair da zona de conforto;setback|contratempo`],
+   ["Saúde e energia",`sleep|sono;rest|descanso;exercise|exercício;healthy|saudável;stress|estresse;energy|energia;mood|humor;well-being|bem-estar;balance|equilíbrio;recharge|recarregar;overwhelmed|sobrecarregado;mindful|atento, consciente`],
+   ["Verbo + padrão",`enjoy doing|gostar de fazer;avoid doing|evitar fazer;keep doing|continuar fazendo;finish doing|terminar de fazer;decide to do|decidir fazer;plan to do|planejar fazer;manage to do|conseguir fazer;tend to do|tender a fazer;try to do|tentar fazer;stop doing|parar de fazer;look forward to doing|estar ansioso para fazer;be used to doing|estar acostumado a fazer`],
+   ["Chunks pessoais",`I'm trying to|estou tentando;I've been meaning to|estou querendo há um tempo;it's worth it|vale a pena;easier said than done|mais fácil falar do que fazer;little by little|pouco a pouco;in the long run|a longo prazo;it works for me|funciona para mim;I struggle with|tenho dificuldade com;I'm getting better at|estou melhorando em;what helps me is|o que me ajuda é;one thing I've learned is|uma coisa que aprendi é;day by day|dia após dia`]],
+   res:[["Atomic Habits (audiobook)","pod","Capítulos curtos; reouça o mesmo capítulo duas vezes."],["Matt D'Avella","yt","Fala calma e clara sobre hábitos."],["Ali Abdaal","yt","Produtividade em inglês britânico."],["TED: Tim Urban, Inside the mind of a master procrastinator","yt","14 minutos, com transcrição. Ótimo para shadowing."],["Deep Questions with Cal Newport","pod","Nível Desafio; deixe para o fim da semana."]],
+   cont:["Vídeos sobre rotina matinal e construção de hábitos","Palestras TED de 10 a 18 minutos sobre foco e procrastinação","Um capítulo de audiobook de desenvolvimento pessoal"],
+   d:[["Shadowing de 1 a 2 minutos de uma palestra TED. Sublinhe na transcrição os to, for e of e fale-os fracos.","TED: Tim Urban, com transcrição"],
+   ["Reassista um vídeo sobre hábitos. Pause a cada conselho e diga se já tentou e se funcionou. Minere 5 frases.","Matt D'Avella ou Ali Abdaal"],
+   ["Escreva 180 palavras: um hábito que você quer criar, por quê e o plano. Use 4 gerúndios e 4 infinitivos.","ChatGPT ou Claude + prompt de escrita"],
+   ["Roleplay: a IA é um coach e pergunta sobre suas metas de carreira e de inglês para os próximos 12 meses.","Modo de voz do ChatGPT ou Claude"],
+   ["Escreva e grave a 4ª história STAR: quando você aprendeu algo novo rapidamente.","Banco de histórias STAR do plano"],
+   ["Leia um artigo sobre produtividade para devs. Leia um parágrafo em voz alta e minere 5 a 10 frases.","Blog de Cal Newport ou James Clear"]],
+   check:"Você consegue responder “How do you keep learning?” em 90 segundos?"},
+
+  {t:"Small talk e vida cotidiana",s:"Os primeiros 5 minutos de qualquer call: fim de semana, clima, comida, planos",
+   goal:"Manter 5 minutos de small talk fazendo perguntas de volta, sem silêncio constrangedor.",
+   gram:{t:"Perguntas e question tags",x:"Ordem: palavra interrogativa + auxiliar + sujeito + verbo. A tag no fim confirma: frase positiva pede tag negativa, e o contrário.",e:["How was your weekend?","What have you been up to lately?","It's really hot today, isn't it?","You play tennis, don't you?"]},
+   pron:"Entonação: perguntas de sim ou não sobem no fim; perguntas com what, how, where descem.",
+   micro:"Toda vez que não souber o nome de um objeto ao seu redor, pesquise na hora e diga uma frase com ele 3 vezes.",
+   v:[["Abrir conversa",`how was your weekend?|como foi seu fim de semana?;any plans for|algum plano para;what have you been up to?|o que você tem feito?;not much|nada demais;same here|eu também;how about you?|e você?;long time no see|quanto tempo;how's work?|como vai o trabalho?;can't complain|não posso reclamar;busy as usual|corrido como sempre;glad to hear that|que bom ouvir isso;that's too bad|que pena`],
+   ["Clima e lugar",`weather|clima;sunny|ensolarado;rainy|chuvoso;humid|úmido;freezing|congelante;boiling|muito quente;forecast|previsão;season|estação;time zone|fuso horário;neighborhood|bairro;downtown|centro da cidade;traffic|trânsito`],
+   ["Comida",`grab a coffee|pegar um café;have dinner|jantar;eat out|comer fora;order in|pedir delivery;cook|cozinhar;meal|refeição;snack|lanche;spicy|apimentado;delicious|delicioso;craving|com vontade de comer;treat|agrado;leftovers|sobras`],
+   ["Fim de semana e lazer",`go out|sair;stay in|ficar em casa;catch up with friends|pôr o papo em dia;take a trip|fazer uma viagem;day off|dia de folga;holiday|feriado;vacation|férias;relax|relaxar;go for a walk|dar uma caminhada;watch a show|ver uma série;chill|ficar de boa;have fun|se divertir`],
+   ["Reações",`really?|sério?;no way!|não acredito!;that's awesome|que demais;sounds fun|parece divertido;I know, right?|né?;oh, I see|ah, entendi;that's a shame|que pena;good for you|que bom pra você;tell me about it|nem me fala;you're kidding|tá brincando;makes sense|faz sentido;lucky you|sortudo`],
+   ["Perguntas úteis",`isn't it?|não é?;don't you?|não é mesmo?;what's it like?|como é?;how come?|por quê, como assim?;what do you think?|o que você acha?;have you ever|você já;how long have you|há quanto tempo você;what kind of|que tipo de;do you mind if|você se importa se;where are you based?|onde você mora?;what about|e quanto a;how often|com que frequência`]],
+   res:[["English with Lucy","yt","Busque “small talk” e “question tags”."],["Rachel's English","yt","Busque “intonation questions”."],["Friends ou The Office (US)","tv","Small talk natural em quase toda cena. Legenda em inglês."],["Tandem ou HelloTalk","app","Troque mensagens de áudio curtas com um nativo."]],
+   cont:["Cenas de escritório e de café em sitcoms","Vlogs de fim de semana e de viagem","Vídeos “small talk for work”"],
+   d:[["Shadowing de 1 a 2 minutos de um diálogo de sitcom. Exagere a entonação das perguntas.","Friends ou The Office, uma cena que você conhece"],
+   ["Reassista um episódio já visto. Pause a cada pergunta e responda você ao personagem; depois devolva uma pergunta. Minere 5 frases.","Pasta 07_REASSISTIR"],
+   ["Escreva um diálogo de 12 falas: os 3 minutos antes de uma call começar. Inclua 3 question tags.","ChatGPT ou Claude + prompt de escrita"],
+   ["Roleplay: você chega 5 minutos antes na call e conversa com um colega dos EUA sobre fim de semana, clima e comida.","Modo de voz do ChatGPT ou Claude"],
+   ["Grave respostas de 30 s para 4 perguntas de aquecimento: How are you today? Where are you calling from? How's the weather there? Any plans for the weekend?","Gravador do celular"],
+   ["Envie 3 mensagens de áudio para um parceiro de troca de idiomas e leia as correções. Minere 5 frases das respostas.","Tandem ou HelloTalk"]],
+   check:"Você consegue fazer 5 perguntas de volta em uma conversa casual?"},
+
+  {t:"Code review e feedback",s:"Comentar o código dos outros e receber críticas com naturalidade",
+   goal:"Dar 3 comentários de code review educados e responder a uma crítica sem ficar na defensiva.",
+   gram:{t:"Condicionais 0, 1 e 2",x:"Zero para regras (if + presente, presente). Primeira para consequência real (if + presente, will). Segunda para hipótese e sugestão educada (if + passado, would).",e:["If the input is empty, the function returns null.","If we merge this now, the build will break.","If I were you, I'd extract this into a helper.","It would be easier to read if we renamed this variable."]},
+   pron:"Reduções: would you /wʊdʒə/, could you /kʊdʒə/, kind of /kaɪndə/, a lot of /əlɑːdə/.",
+   micro:"Ao revisar qualquer código, formule um comentário em inglês em voz alta antes de escrever.",
+   v:[["Code review",`code review|revisão de código;reviewer|revisor;approve|aprovar;request changes|pedir alterações;comment|comentário;nitpick|detalhe pequeno;readability|legibilidade;naming|nomenclatura;duplication|duplicação;style guide|guia de estilo;best practice|boa prática;clean code|código limpo`],
+   ["Dar feedback",`constructive|construtivo;point out|apontar;suggestion|sugestão;improvement|melhoria;concern|preocupação;clear|claro;specific|específico;polite|educado;honest|honesto;praise|elogiar;encourage|encorajar;tone|tom`],
+   ["Receber feedback",`appreciate|agradecer, valorizar;take it personally|levar para o lado pessoal;open to feedback|aberto a críticas;address|tratar, resolver;fix it right away|corrigir já;good catch|boa observação;fair point|ponto justo;learn from|aprender com;defensive|na defensiva;grow|crescer;reflect on|refletir sobre;work on|trabalhar em`],
+   ["Qualidade de código",`unit test|teste unitário;coverage|cobertura;lint|verificador de estilo;maintainable|fácil de manter;readable|legível;reusable|reutilizável;simple|simples;complexity|complexidade;technical debt|dívida técnica;documentation|documentação;type|tipo;error handling|tratamento de erros`],
+   ["Condições",`if|se;unless|a menos que;as long as|desde que;in case|caso;otherwise|senão;would|verbo no futuro do pretérito;could|poderia;might|talvez;provided that|contanto que;whether|se (ou não);even if|mesmo que;what would happen if|o que aconteceria se`],
+   ["Chunks de review",`looks good to me|para mim está bom;nice work|bom trabalho;I'd suggest|eu sugeriria;have you considered|você considerou;what do you think about|o que acha de;if I were you, I'd|se eu fosse você, eu;it would be easier to read if|ficaria mais fácil de ler se;could we rename this?|podemos renomear isso?;just a small thing|só um detalhe;feel free to ignore|fique à vontade para ignorar;thanks for the feedback|obrigado pelo retorno;I'll fix that|vou corrigir isso`]],
+   res:[["Google Engineering Practices: Code Review","web","Guia público do Google sobre como revisar e como escrever comentários."],["Conventional Comments","web","Padrão de rótulos para comentários de review: suggestion, nitpick, praise."],["Soft Skills Engineering","pod","Episódios sobre feedback difícil."],["Rachel's English","yt","Busque “reductions” e “linking”."]],
+   cont:["Vídeos de code review ao vivo","Pull requests com muitos comentários em projetos open source","Episódios de podcast sobre dar e receber feedback"],
+   d:[["Shadowing de 1 a 2 minutos de um code review gravado. Foque nas reduções de would you e could you.","YouTube: “live code review”"],
+   ["Reassista um code review. Pause em cada trecho de código e faça seu próprio comentário antes do revisor. Minere 5 frases.","YouTube: “code review” da sua linguagem"],
+   ["Escreva 6 comentários de review para um código seu antigo: 2 elogios, 3 sugestões com condicional, 1 pergunta.","ChatGPT ou Claude + Conventional Comments"],
+   ["Roleplay: a IA é um colega sênior que critica seu pull request. Agradeça, pergunte e defenda uma decisão com calma.","Modo de voz do ChatGPT ou Claude"],
+   ["Escreva e grave a 5ª história STAR: um feedback difícil que você recebeu e o que mudou depois.","Banco de histórias STAR do plano"],
+   ["Leia a seção sobre como escrever comentários de review. Leia um trecho em voz alta e minere 5 a 10 frases.","Google Engineering Practices: Code Review"]],
+   check:"Você consegue sugerir uma mudança em um código usando “If I were you…” ou “It would be… if…”?"},
+
+  {t:"Decisões técnicas e trade-offs",s:"Justificar escolhas de arquitetura e comparar opções",
+   goal:"Explicar em 2 minutos uma decisão técnica sua: opções, critérios, escolha e o que faria diferente.",
+   gram:{t:"Conectores de contraste, causa e resultado",x:"Although e even though introduzem contraste dentro da frase. However começa uma frase nova. Since e because dão a causa; therefore e so dão o resultado.",e:["Although it's slower, it's much easier to maintain.","We chose Postgres since the data is relational.","It scales well. However, it costs more.","The team was small, so we kept it simple."]},
+   pron:"Grupos de pensamento: faça uma pausa curta antes de although, because, however. Pausar no lugar certo soa fluente.",
+   micro:"Diante de qualquer escolha do dia (o que almoçar, que rota pegar), diga em voz alta: “The trade-off here is…”.",
+   v:[["Decisão",`decision|decisão;trade-off|troca, compensação;pros and cons|prós e contras;option|opção;approach|abordagem;choose|escolher;go with|optar por;weigh|pesar;criteria|critérios;constraint|restrição;assumption|suposição;risk|risco`],
+   ["Arquitetura",`architecture|arquitetura;microservices|microsserviços;monolith|monólito;API|interface entre sistemas;endpoint|ponto de acesso da API;queue|fila;load balancer|balanceador de carga;storage|armazenamento;cloud|nuvem;container|contêiner;service|serviço;layer|camada`],
+   ["Qualidades do sistema",`scalability|escalabilidade;reliability|confiabilidade;availability|disponibilidade;security|segurança;maintainability|facilidade de manutenção;flexibility|flexibilidade;simplicity|simplicidade;cost|custo;speed|velocidade;robust|robusto;overkill|exagero;good enough|bom o suficiente`],
+   ["Conectores",`although|embora;even though|apesar de que;whereas|ao passo que;however|no entanto;therefore|portanto;since|já que;instead of|em vez de;rather than|em vez de;despite|apesar de;in addition|além disso;while|enquanto, embora;so|então`],
+   ["Comparar opções",`compared to|comparado a;similar to|parecido com;different from|diferente de;faster to build|mais rápido de construir;harder to maintain|mais difícil de manter;in terms of|em termos de;depends on|depende de;it comes down to|no fim se resume a;at scale|em grande escala;in the short term|a curto prazo;in the long term|a longo prazo;worth the effort|vale o esforço`],
+   ["Chunks de justificativa",`the trade-off here is|a troca aqui é;we went with X because|optamos por X porque;the main reason was|o principal motivo foi;one downside is|uma desvantagem é;the upside is|a vantagem é;given our constraints|dadas nossas restrições;it made more sense to|fez mais sentido;in hindsight|olhando para trás;if I had to choose|se eu tivesse que escolher;it depends on the use case|depende do caso de uso;that would allow us to|isso nos permitiria;the bottom line is|o resumo é`]],
+   res:[["ByteByteGo","yt","System design em vídeos curtos: cheio de trade-offs."],["Exponent","yt","Mocks de system design; ouça como o candidato justifica."],["The Pragmatic Engineer","web","Artigos sobre decisões reais de engenharia."],["Software Engineering Daily","pod","Nível Desafio: entrevistas sobre arquitetura."]],
+   cont:["Vídeos “X vs Y” de tecnologias que você conhece","Mocks de entrevista de system design","Posts de blogs de engenharia explicando por que migraram de uma tecnologia"],
+   d:[["Shadowing de 1 a 2 minutos de uma explicação de system design. Marque as pausas antes dos conectores.","ByteByteGo"],
+   ["Reassista um vídeo “X vs Y”. Pause antes da conclusão e diga qual você escolheria e por quê. Minere 5 frases.","YouTube: comparação de duas tecnologias que você usa"],
+   ["Escreva 200 palavras sobre uma decisão técnica sua: contexto, opções, escolha, resultado. Use 6 conectores.","ChatGPT ou Claude + prompt de escrita"],
+   ["Roleplay: a IA é um entrevistador que questiona cada escolha de um sistema que você construiu. Justifique.","Modo de voz do ChatGPT ou Claude"],
+   ["Resolva um problema fácil de algoritmo pensando em voz alta em inglês e grave: abordagem, complexidade, casos extremos.","NeetCode, um problema Easy"],
+   ["Leia um post de migração de tecnologia. Leia a conclusão em voz alta e minere 5 a 10 frases.","Blog de engenharia da Stripe, Netflix ou Uber"]],
+   check:"Você consegue defender uma escolha técnica citando uma vantagem e uma desvantagem?"},
+
+  {t:"Entrevista comportamental: histórias STAR",s:"Contar histórias com começo, meio, fim e resultado",
+   goal:"Contar 3 histórias STAR diferentes, de 90 a 120 segundos cada, sem roteiro.",
+   gram:{t:"Tempos narrativos",x:"Past simple para os eventos principais. Past continuous para o cenário (o que estava acontecendo). Past perfect para o que tinha ocorrido antes.",e:["We were migrating the database when the outage started.","I noticed that someone had changed the config.","I called the team, we rolled back, and the service recovered.","By the time I joined, the project had already been delayed twice."]},
+   pron:"Ritmo de história: desacelere e dê ênfase às palavras-chave e aos números do resultado.",
+   micro:"No banho, responda em voz alta a uma pergunta comportamental por dia, começando com “Let me give you an example”.",
+   v:[["Formato STAR",`situation|situação;context|contexto;action|ação;result|resultado;behavioral interview|entrevista comportamental;example|exemplo;story|história;detail|detalhe;responsibility|responsabilidade;lesson learned|lição aprendida;takeaway|aprendizado principal;follow-up question|pergunta de seguimento`],
+   ["Desafios",`obstacle|obstáculo;disagreement|desacordo;pressure|pressão;tight deadline|prazo apertado;mistake|erro;fail|falhar;struggle|dificuldade;misunderstanding|mal-entendido;tough|difícil;urgent|urgente;unclear|pouco claro;overcome|superar`],
+   ["Ações",`deal with|lidar com;take the initiative|tomar a iniciativa;step up|assumir a frente;speak up|se manifestar;negotiate|negociar;compromise|chegar a um meio-termo;delegate|delegar;mentor|orientar;lead|liderar;support|apoiar;convince|convencer;adapt|adaptar-se`],
+   ["Sequência da narrativa",`at first|no início;then|então;after that|depois disso;meanwhile|enquanto isso;eventually|por fim;in the end|no final;by the time|quando, na altura em que;as soon as|assim que;suddenly|de repente;before that|antes disso;had already|já tinha;it was the first time|foi a primeira vez`],
+   ["Qualidades pessoais",`reliable|confiável;proactive|proativo;detail-oriented|detalhista;team player|bom de equipe;curious|curioso;resilient|resiliente;flexible|flexível;organized|organizado;self-motivated|automotivado;humble|humilde;accountable|que responde pelos resultados;eager to learn|com vontade de aprender`],
+   ["Chunks de entrevista",`let me give you an example|deixa eu dar um exemplo;to give you some context|para dar um contexto;my role was to|meu papel era;I decided to|decidi;what I did was|o que eu fiz foi;this led to|isso levou a;we managed to|conseguimos;looking back|olhando para trás;what I'd do differently is|o que eu faria diferente é;the biggest lesson was|a maior lição foi;I realized that|percebi que;it taught me to|isso me ensinou a`]],
+   res:[["A Life Engineered","yt","Como responder perguntas comportamentais em empresas de tecnologia."],["Exponent","yt","Mocks de entrevista comportamental para engenheiros."],["Google Interview Warmup","web","Perguntas com transcrição automática das suas respostas."],["TED: Julian Treasure, How to speak so that people want to listen","yt","10 minutos sobre voz e ritmo."]],
+   cont:["Mocks de entrevista comportamental para engenheiros de software","Vídeos sobre o método STAR","Histórias de incidentes contadas em podcasts tech"],
+   d:[["Shadowing de 1 a 2 minutos de um candidato contando uma história em um mock. Copie o ritmo e as pausas.","Exponent: “behavioral mock interview software engineer”"],
+   ["Reassista um mock comportamental. Pause depois de cada pergunta e responda com uma história sua antes do candidato. Minere 5 frases.","Exponent ou A Life Engineered"],
+   ["Escreva em tópicos 2 histórias novas: um erro seu e um prazo apertado. Cada uma com um número no resultado.","ChatGPT ou Claude + prompt de escrita"],
+   ["Simulação de entrevista comportamental de 15 minutos: 4 perguntas com seguimento e feedback no final.","Modo de voz do ChatGPT ou Claude + prompt de roleplay"],
+   ["Grave 3 histórias seguidas, cada uma em 90 a 120 s. Ouça e anote onde travou.","Gravador do celular + Google Interview Warmup"],
+   ["Leia um guia de perguntas comportamentais para engenheiros. Para 5 perguntas, decida qual história sua responde. Minere 5 a 10 frases.","Tech Interview Handbook: behavioral questions"]],
+   check:"Você tem 6 histórias STAR prontas e consegue contar qualquer uma sem ler?"},
+
+  {t:"Buscando a vaga: recrutador, salário e trabalho remoto",s:"Do currículo à conversa de triagem e às suas perguntas no final",
+   goal:"Fazer uma triagem simulada de 15 minutos com recrutador, incluindo pretensão salarial e 3 perguntas suas.",
+   gram:{t:"Perguntas indiretas e pedidos educados",x:"Depois de Could you tell me ou I was wondering, a ordem volta a ser de afirmação: sujeito antes do verbo, sem do ou does.",e:["Could you tell me what the team structure is?","I was wondering if the role is fully remote.","Do you know when I can expect to hear back?","Would it be possible to reschedule the interview?"]},
+   pron:"Números e datas: thirteen × thirty, fifteen × fifty; valores de salário e anos falados com clareza.",
+   micro:"Leia uma descrição de vaga em inglês por dia no LinkedIn e diga em voz alta por que você se encaixa.",
+   v:[["A vaga",`job opening|vaga;apply for|candidatar-se a;application|candidatura;resume|currículo;cover letter|carta de apresentação;recruiter|recrutador;hiring manager|gestor da vaga;job description|descrição da vaga;qualifications|qualificações;referral|indicação;portfolio|portfólio;candidate|candidato`],
+   ["Processo seletivo",`screening call|triagem por telefone;technical interview|entrevista técnica;take-home assignment|teste para fazer em casa;live coding|programar ao vivo;onsite|etapa final;offer|proposta;reject|rejeitar;next steps|próximos passos;timeline|cronograma;hear back|ter retorno;background check|verificação de antecedentes;onboarding|integração`],
+   ["Remuneração",`salary|salário;salary range|faixa salarial;compensation|remuneração total;benefits|benefícios;bonus|bônus;equity|participação acionária;raise|aumento;counteroffer|contraproposta;contractor|prestador de serviço;full-time employee|funcionário efetivo;paid time off|folga remunerada;notice period|aviso prévio`],
+   ["Trabalho remoto",`remote|remoto;hybrid|híbrido;async|assíncrono;overlap|sobreposição de horário;working hours|horário de trabalho;available|disponível;relocate|mudar-se;visa|visto;distributed team|equipe distribuída;flexible hours|horário flexível;home office|escritório em casa;work-life balance|equilíbrio entre trabalho e vida`],
+   ["Empresa e cultura",`company culture|cultura da empresa;values|valores;mission|missão;startup|empresa iniciante;enterprise|grande empresa;growth opportunities|oportunidades de crescimento;career development|desenvolvimento de carreira;management|gestão;headcount|número de funcionários;product|produto;industry|setor;fit|encaixe`],
+   ["Chunks com o recrutador",`I'm looking for|estou buscando;I'm interested in|tenho interesse em;could you tell me more about|poderia me contar mais sobre;I was wondering if|eu queria saber se;what does a typical day look like?|como é um dia típico?;what's the team like?|como é a equipe?;my salary expectation is|minha pretensão salarial é;I'm open to|estou aberto a;I'm available to start|estou disponível para começar;do you have any questions for me?|você tem perguntas para mim?;thank you for your time|obrigado pelo seu tempo;I look forward to hearing from you|aguardo seu retorno`]],
+   res:[["A Life Engineered","yt","Processo seletivo e negociação em empresas de tecnologia."],["Levels.fyi","web","Faixas salariais reais por empresa e nível, em inglês."],["LinkedIn Jobs","web","Descrições de vagas remotas para ler todo dia."],["Pramp (Exponent Practice)","web","Agende seu primeiro mock com outro candidato para depois da semana 12."],["Rachel's English","yt","Busque “numbers” para treinar 13 × 30."]],
+   cont:["Vídeos “recruiter screening call example”","Vídeos sobre negociação de salário para engenheiros","Descrições de vagas remotas na sua stack"],
+   d:[["Shadowing de 1 a 2 minutos de uma triagem com recrutador. Depois leia em voz alta 10 números: salários, anos, percentuais.","YouTube: “recruiter phone screen example” + Rachel's English"],
+   ["Reassista uma triagem simulada. Pause e responda a cada pergunta do recrutador com seus dados reais. Minere 5 frases.","YouTube: “recruiter screening call software engineer”"],
+   ["Escreva seu resumo profissional de 4 linhas para o currículo e uma mensagem curta respondendo a um recrutador.","ChatGPT ou Claude + prompt de escrita"],
+   ["Roleplay de triagem de 15 minutos: trajetória, motivo da busca, pretensão salarial, disponibilidade e fuso horário.","Modo de voz do ChatGPT ou Claude"],
+   ["Grave “Why do you want to work here?” para uma vaga real e as 3 perguntas que você faria no final.","Gravador do celular + uma vaga do LinkedIn"],
+   ["Leia 3 descrições de vagas remotas na sua stack. Sublinhe requisitos repetidos e minere 5 a 10 frases.","LinkedIn Jobs"]],
+   check:"Refaça a gravação de 3 minutos do checkpoint e compare com a da semana 1."}
+  ];
+
+  const DIAS_LONGOS = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+  const TIPOS_RECURSO = { yt: 'YouTube', pod: 'áudio', web: 'site', app: 'app', tv: 'série' };
+  const TOTAL_DIAS = SEMANAS.length * 7;
+
+  // Semana começa em 1 (como no banco); dia vai de 0 (segunda) a 6 (domingo)
+  const chave = (semana, dia) => `${semana}-${dia}`;
+  const posicao = (semana, dia) => (semana - 1) * 7 + dia;
+  const dePosicao = (p) => ({ semana: Math.floor(p / 7) + 1, dia: p % 7 });
+
+  const palavrasDoGrupo = (grupo) => grupo[1].split(';').map((p) => {
+    const [termo, traducao] = p.split('|');
+    return { termo, traducao };
+  });
+  const totalPalavras = (s) => s.v.reduce((t, g) => t + g[1].split(';').length, 0);
+
+  const linkRecurso = (nome, tipo) => (tipo === 'yt'
+    ? 'https://www.youtube.com/results?search_query='
+    : 'https://www.google.com/search?q=') + encodeURIComponent(nome);
+
+  // Passos dos 30 minutos ativos de um dia
+  function passosDoDia(semana, dia) {
+    const s = SEMANAS[semana - 1];
+    if (dia < 6) {
+      return [
+        { min: 7, titulo: 'Anki: revisão + vocabulário novo',
+          texto: `Revise os cards pendentes. Depois estude as 12 palavras do grupo “${s.v[dia][0]}” e crie cards só das que você ainda não usa (no máximo 10).`,
+          recurso: 'Anki + palavras de hoje' },
+        { min: 20, titulo: BLOCOS[dia], texto: s.d[dia][0], recurso: s.d[dia][1] },
+        { min: 3, titulo: 'Registro', texto: 'Anote de 3 a 5 frases novas e 1 coisa que você não soube dizer hoje.', recurso: 'Diário de Lacunas' },
+      ];
+    }
+    return [
+      { min: 7, titulo: 'Anki: revisão geral', texto: 'Revise todos os cards da semana. Suspenda os que estiverem fáceis demais ou inúteis.', recurso: 'Anki' },
+      { min: 10, titulo: 'Ouvir as gravações', texto: `Ouça o que você gravou na semana e anote 3 erros que se repetem. Faça o teste: ${s.check}`, recurso: 'Gravador do celular' },
+      { min: 5, titulo: 'Lacunas viram cards', texto: 'Transforme o Diário de Lacunas da semana em cards de frase.', recurso: 'Diário de Lacunas + Anki' },
+      { min: 5, titulo: 'Repor o barril', texto: 'Adicione de 5 a 10 itens sobre o tema da próxima semana e remova o que não prendeu.', recurso: 'Playlists e fila de podcasts' },
+      { min: 3, titulo: 'Registro', texto: 'Marque os números da semana: dias feitos, horas de input, frases mineradas.', recurso: 'Diário de Lacunas' },
+    ];
+  }
+  const minutosDoDia = (semana, dia) => passosDoDia(semana, dia).reduce((t, p) => t + p.min, 0);
+
+  // ---------- autenticação ----------
+  // Não há "Criar conta": o banco é pessoal e as contas são criadas pelo painel do Supabase
+  $('#form-login').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = $('#email').value.trim();
+    const password = $('#senha').value;
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) aviso('Não foi possível entrar: ' + error.message, true);
+  });
+
+  // Redireciona para o Google; na volta o supabase-js lê a sessão da URL e dispara onAuthStateChange
+  $('#entrar-google').addEventListener('click', async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: location.origin + location.pathname },
+    });
+    if (error) aviso('Não foi possível entrar com Google: ' + error.message, true);
+  });
+
+  $('#sair').addEventListener('click', () => {
+    fecharMenuConta();
+    supabase.auth.signOut();
+  });
+
+  // Menu da conta (avatar no topo da aba Hoje)
+  function fecharMenuConta() {
+    $('#menu-conta').hidden = true;
+    $('#avatar').setAttribute('aria-expanded', 'false');
+  }
+  $('#avatar').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const abrir = $('#menu-conta').hidden;
+    $('#menu-conta').hidden = !abrir;
+    $('#avatar').setAttribute('aria-expanded', String(abrir));
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.conta')) fecharMenuConta();
+  });
+
+  let usuarioAtual = null;
+  // setTimeout evita chamar o Supabase de dentro do callback (recomendação da documentação)
+  supabase.auth.onAuthStateChange((_evento, session) => {
+    setTimeout(() => mostrarTela(session), 0);
+  });
+
+  async function mostrarTela(session) {
+    const logado = Boolean(session);
+    $('#tela-login').hidden = logado;
+    $('#tela-app').hidden = !logado;
+    if (!logado) { usuarioAtual = null; return; }
+    if (usuarioAtual === session.user.id) return;   // ex.: renovação de token
+
+    usuarioAtual = session.user.id;
+    const email = session.user.email ?? '';
+    $('#usuario').textContent = email;
+    $('#avatar').textContent = (email[0] ?? '?').toUpperCase();
+    feitos = new Set();
+    datas = new Map();
+    diaVisto = { semana: 1, dia: 0 };
+    desenharChipsVocab();
+    desenharTudo();
+    abrirAba('hoje');
+    await Promise.all([carregarProgresso(), carregarEstado()]);
+    filtroVocab = diaVisto.semana;
+    desenharChipsVocab();
+    desenharTudo();
+  }
+
+  // Ao voltar para o app (ex.: depois de estudar em outro aparelho), busca o progresso de novo
+  document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState !== 'visible' || !usuarioAtual || salvando) return;
+    await carregarProgresso();
+    desenharTudo();
+  });
+
+  // ---------- abas ----------
+  $$('[data-aba]').forEach((b) =>
+    b.addEventListener('click', () => {
+      if (b.dataset.aba === 'roteiro') semanaAberta = null;
+      abrirAba(b.dataset.aba);
+    }));
+
+  function abrirAba(nome) {
+    $$('.nav-botao').forEach((b) => {
+      if (b.dataset.aba === nome) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
+    $$('.aba').forEach((s) => { s.hidden = s.id !== 'aba-' + nome; });
+    window.scrollTo(0, 0);
+    if (nome === 'roteiro') desenharRoteiro();
+    if (nome === 'vocabulario') desenharVocab();
+  }
+
+  // ---------- progresso (banco) ----------
+  // feitos: chaves 'semana-dia' dos dias concluídos; datas: chave → quando foi concluído
+  let feitos = new Set();
+  let datas = new Map();
+  let salvando = false;
+
+  async function carregarProgresso() {
+    const { data, error } = await supabase.from('day_progress').select('week, day, completed_at');
+    if (error) return aviso('Não foi possível ler o progresso: ' + error.message, true);
+    feitos = new Set(data.map((l) => chave(l.week, l.day)));
+    datas = new Map(data.map((l) => [chave(l.week, l.day), l.completed_at]));
+  }
+
+  // Marca ou desmarca um dia. A tela muda na hora; se o banco recusar, volta ao que era.
+  async function alternarDia(semana, dia) {
+    const k = chave(semana, dia);
+    const marcar = !feitos.has(k);
+    const dataAntiga = datas.get(k);
+    if (marcar) { feitos.add(k); datas.set(k, new Date().toISOString()); }
+    else { feitos.delete(k); datas.delete(k); }
+    desenharTudo();
+
+    salvando = true;
+    const tabela = supabase.from('day_progress');
+    const { error } = marcar
+      ? await tabela.upsert({ week: semana, day: dia }, { onConflict: 'user_id,week,day', ignoreDuplicates: true })
+      : await tabela.delete().match({ week: semana, day: dia });
+    salvando = false;
+    if (error) {
+      if (marcar) { feitos.delete(k); datas.delete(k); }
+      else { feitos.add(k); datas.set(k, dataAntiga); }
+      desenharTudo();
+      aviso('Não foi possível salvar: ' + error.message, true);
+      return null;
+    }
+    return marcar;
+  }
+
+  // Primeiro dia ainda não concluído, na ordem do roteiro (null quando terminou tudo)
+  function proximoPendente() {
+    for (let p = 0; p < TOTAL_DIAS; p++) {
+      const { semana, dia } = dePosicao(p);
+      if (!feitos.has(chave(semana, dia))) return { semana, dia };
+    }
+    return null;
+  }
+  const feitosNaSemana = (semana) => DIAS_ROTEIRO.filter((_, dia) => feitos.has(chave(semana, dia))).length;
+
+  // ---------- onde parei (banco) ----------
+  // diaVisto é o dia aberto na aba Hoje. Fica salvo em user_state para abrir no mesmo ponto em outro aparelho.
+  let diaVisto = { semana: 1, dia: 0 };
+  let timerEstado;
+
+  async function carregarEstado() {
+    const { data, error } = await supabase.from('user_state').select('last_week, last_day').maybeSingle();
+    if (error) return aviso('Não foi possível ler onde você parou: ' + error.message, true);
+    const valido = data && data.last_week >= 1 && data.last_week <= SEMANAS.length && data.last_day !== null;
+    diaVisto = valido ? { semana: data.last_week, dia: data.last_day } : (proximoPendente() ?? { semana: 1, dia: 0 });
+  }
+
+  // Espera um pouco antes de gravar, para não salvar a cada toque nas setas
+  function salvarEstado() {
+    clearTimeout(timerEstado);
+    timerEstado = setTimeout(async () => {
+      const { error } = await supabase.from('user_state')
+        .upsert({ last_week: diaVisto.semana, last_day: diaVisto.dia }, { onConflict: 'user_id' });
+      if (error) aviso('Não foi possível salvar onde você parou: ' + error.message, true);
+    }, 800);
+  }
+
+  function verDia(semana, dia) {
+    diaVisto = { semana, dia };
+    salvarEstado();
+    desenharHoje();
+  }
+
+  function desenharTudo() {
+    desenharHoje();
+    desenharRoteiro();
+    desenharProgresso();
+  }
+
+  // ---------- hoje ----------
+  const itemPasso = (p, passivo = false) => `<li class="passo${passivo ? ' passivo' : ''}">
+      <span class="passo-min num-fonte">${esc(p.min)}</span>
+      <div><b>${esc(p.titulo)}</b><p>${esc(p.texto)}</p>${p.recurso ? `<small>Recurso: ${esc(p.recurso)}</small>` : ''}</div>
+    </li>`;
+  const itemPalavra = (p) => `<li><b lang="en">${esc(p.termo)}</b><span>${esc(p.traducao)}</span></li>`;
+
+  function desenharHoje() {
+    const { semana, dia } = diaVisto;
+    const s = SEMANAS[semana - 1];
+    const p = posicao(semana, dia);
+    const feito = feitos.has(chave(semana, dia));
+    const pendente = proximoPendente();
+    const foraDoPonto = pendente && (pendente.semana !== semana || pendente.dia !== dia);
+
+    $('#hoje-semana').textContent = `Semana ${semana} de ${SEMANAS.length}`;
+    $('#hoje-dia').textContent = DIAS_LONGOS[dia];
+    $('[data-mudar-dia="-1"]').disabled = p === 0;
+    $('[data-mudar-dia="1"]').disabled = p === TOTAL_DIAS - 1;
+
+    if (!pendente && feito && p === TOTAL_DIAS - 1) {
+      $('#hoje-corpo').innerHTML = `<section class="cartao concluida">
+          <span class="selo-ok">${ICONE.checkG}</span>
+          <span class="sobretitulo positivo">${TOTAL_DIAS} de ${TOTAL_DIAS} dias</span>
+          <h1>Roteiro concluído!</h1>
+          <p class="dica">Refaça a gravação de 3 minutos do checkpoint e compare com a da semana 1.</p>
+        </section>`;
+      return;
+    }
+
+    const passos = passosDoDia(semana, dia);
+    const passivos = [
+      { min: '60+', titulo: 'Tempos mortos', texto: `${TEMPOS_MORTOS[dia][0]}. Dê preferência ao conteúdo desta semana.`, recurso: TEMPOS_MORTOS[dia][1] },
+      { min: 'livre', titulo: 'Micro-hábito da semana', texto: s.micro, recurso: '' },
+    ];
+    const grupo = dia < 6 ? s.v[dia] : null;
+    const data = datas.get(chave(semana, dia));
+
+    $('#hoje-corpo').innerHTML = `
+      ${foraDoPonto ? `<button class="botao largo voltar-pendente" type="button" data-ir-pendente>Ir para onde parei: semana ${pendente.semana}, ${esc(DIAS_LONGOS[pendente.dia].toLowerCase())}</button>` : ''}
+      <section class="cartao dia-cartao">
+        <div class="linha-topo"><span class="sobretitulo">${esc(s.t)}</span><span class="selo">${minutosDoDia(semana, dia)} min</span></div>
+        <h2>${esc(BLOCOS[dia])}</h2>
+        <p class="dica">Meta da semana: ${esc(s.goal)}</p>
+        ${feito ? `<p class="feito-em">${ICONE.checkP}Concluído${data ? ' em ' + esc(fmtDia(isoLocal(new Date(data)))) : ''}</p>` : ''}
+      </section>
+      <div class="hoje-layout">
+        <div>
+          <h2 class="sobretitulo grupo-titulo">Passo a passo <span class="num-fonte">minutos</span></h2>
+          <ol class="passos cartao">${passos.map((x) => itemPasso(x)).join('')}</ol>
+          <h2 class="sobretitulo grupo-titulo">Ao longo do dia</h2>
+          <ul class="passos cartao">${passivos.map((x) => itemPasso(x, true)).join('')}</ul>
+        </div>
+        <div>
+          ${grupo ? `<h2 class="sobretitulo grupo-titulo">Palavras de hoje <span>${esc(grupo[0])}</span></h2>
+          <ul class="vocab cartao">${palavrasDoGrupo(grupo).map(itemPalavra).join('')}</ul>` : `<h2 class="sobretitulo grupo-titulo">Teste da semana</h2>
+          <section class="cartao bloco"><p>${esc(s.check)}</p></section>`}
+        </div>
+      </div>
+      <div class="acao-dia">
+        ${feito
+          ? '<button class="botao largo" type="button" data-alternar-hoje>Desmarcar dia</button>'
+          : '<button class="botao primario grande" type="button" data-alternar-hoje>Concluir dia</button>'}
+      </div>`;
+  }
+
+  $$('[data-mudar-dia]').forEach((b) => b.addEventListener('click', () => {
+    const p = posicao(diaVisto.semana, diaVisto.dia) + Number(b.dataset.mudarDia);
+    if (p < 0 || p >= TOTAL_DIAS) return;
+    const { semana, dia } = dePosicao(p);
+    verDia(semana, dia);
+  }));
+
+  $('#hoje-corpo').addEventListener('click', async (e) => {
+    if (e.target.closest('[data-ir-pendente]')) {
+      const pendente = proximoPendente();
+      if (pendente) { verDia(pendente.semana, pendente.dia); window.scrollTo(0, 0); }
+      return;
+    }
+    const botao = e.target.closest('[data-alternar-hoje]');
+    if (!botao) return;
+    botao.disabled = true;
+    const marcou = await alternarDia(diaVisto.semana, diaVisto.dia);
+    if (marcou === null) return;
+    if (!marcou) return aviso('Dia desmarcado.');
+    aviso('Dia concluído!');
+    // Depois de concluir, a aba já mostra o próximo dia a fazer
+    const pendente = proximoPendente();
+    if (pendente) { verDia(pendente.semana, pendente.dia); window.scrollTo(0, 0); }
+  });
+
+  // ---------- roteiro ----------
+  let semanaAberta = null;   // null = lista das semanas; número = detalhe daquela semana
+
+  function desenharRoteiro() {
+    $('#roteiro-lista').hidden = semanaAberta !== null;
+    $('#roteiro-semana').hidden = semanaAberta === null;
+    if (semanaAberta === null) desenharSemanas(); else desenharSemana(semanaAberta);
+  }
+
+  function desenharSemanas() {
+    const pendente = proximoPendente();
+    $('#lista-semanas').innerHTML = SEMANAS.map((s, i) => {
+      const semana = i + 1;
+      const n = feitosNaSemana(semana);
+      return `<button class="cartao semana-card" type="button" data-semana="${semana}" ${pendente?.semana === semana ? 'aria-current="true"' : ''}>
+          <div class="linha-topo"><span class="sobretitulo">Semana ${doisDigitos(semana)}${pendente?.semana === semana ? ' · atual' : ''}</span>
+            <span class="selo${n === 7 ? ' feita' : ''}">${n}/7</span></div>
+          <h2>${esc(s.t)}</h2>
+          <p>${esc(s.s)}</p>
+          <div class="trilho"><span class="${n === 7 ? 'dentro' : ''}" style="width: ${Math.round(n / 7 * 100)}%"></span></div>
+        </button>`;
+    }).join('');
+  }
+
+  function desenharSemana(semana) {
+    const s = SEMANAS[semana - 1];
+    const pendente = proximoPendente();
+    const n = feitosNaSemana(semana);
+    $('#roteiro-semana').innerHTML = `
+      <header class="topo-semana">
+        <button class="icone" type="button" data-voltar-roteiro aria-label="Voltar para o roteiro">${ICONE.voltar}</button>
+        <div><span class="sobretitulo">Semana ${doisDigitos(semana)} · ${n}/7 dias</span><h1>${esc(s.t)}</h1></div>
+      </header>
+      <p class="dica">Meta da semana: ${esc(s.goal)}</p>
+      <div class="semana-layout">
+        <div>
+          <h2 class="sobretitulo grupo-titulo">Dias</h2>
+          <ul class="dias cartao">${DIAS_ROTEIRO.map((curto, dia) => {
+            const feito = feitos.has(chave(semana, dia));
+            const atual = pendente?.semana === semana && pendente.dia === dia;
+            return `<li class="${feito ? 'feito' : ''}" ${atual ? 'aria-current="step"' : ''}>
+                <button class="marcar" type="button" data-marcar="${dia}" aria-pressed="${feito}"
+                  aria-label="${feito ? 'Desmarcar' : 'Marcar'} ${esc(DIAS_LONGOS[dia])} da semana ${semana} como ${feito ? 'não concluído' : 'concluído'}"><i>${ICONE.checkP}</i></button>
+                <button class="dia-abrir" type="button" data-abrir-dia="${dia}">
+                  <span class="nome"><small>${esc(curto)}</small><span>${esc(BLOCOS[dia])}</span></span>
+                  <span class="num-fonte">${minutosDoDia(semana, dia)} min</span>
+                </button>
+              </li>`;
+          }).join('')}</ul>
+          <h2 class="sobretitulo grupo-titulo">Gramática e dicção</h2>
+          <section class="cartao bloco">
+            <h3>${esc(s.gram.t)}</h3>
+            <p>${esc(s.gram.x)}</p>
+            <ul class="exemplos" lang="en">${s.gram.e.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+            <p><b>Dicção:</b> ${esc(s.pron)}</p>
+            <p><b>Micro-hábito:</b> ${esc(s.micro)}</p>
+          </section>
+        </div>
+        <div>
+          <h2 class="sobretitulo grupo-titulo">Recursos</h2>
+          <section class="cartao bloco">
+            <ul class="lista-texto">${s.res.map(([nome, tipo, uso]) =>
+              `<li><a href="${esc(linkRecurso(nome, tipo))}" target="_blank" rel="noopener">${esc(nome)}</a> <small>· ${esc(TIPOS_RECURSO[tipo])}</small><br>${esc(uso)}</li>`).join('')}</ul>
+          </section>
+          <h2 class="sobretitulo grupo-titulo">Conteúdos para o barril</h2>
+          <section class="cartao bloco">
+            <ul class="lista-texto">${s.cont.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>
+          </section>
+          <h2 class="sobretitulo grupo-titulo">Vocabulário</h2>
+          <button class="botao largo" type="button" data-ver-vocab>Ver as ${totalPalavras(s)} palavras da semana</button>
+        </div>
+      </div>`;
+  }
+
+  $('#lista-semanas').addEventListener('click', (e) => {
+    const card = e.target.closest('.semana-card');
+    if (!card) return;
+    semanaAberta = Number(card.dataset.semana);
+    desenharRoteiro();
+    window.scrollTo(0, 0);
+  });
+
+  $('#roteiro-semana').addEventListener('click', (e) => {
+    if (e.target.closest('[data-voltar-roteiro]')) {
+      semanaAberta = null;
+      desenharRoteiro();
+      return;
+    }
+    const marcar = e.target.closest('[data-marcar]');
+    if (marcar) return alternarDia(semanaAberta, Number(marcar.dataset.marcar));
+    const abrir = e.target.closest('[data-abrir-dia]');
+    if (abrir) {
+      verDia(semanaAberta, Number(abrir.dataset.abrirDia));
+      return abrirAba('hoje');
+    }
+    if (e.target.closest('[data-ver-vocab]')) {
+      filtroVocab = semanaAberta;
+      $('#busca-vocab').value = '';
+      desenharChipsVocab();
+      abrirAba('vocabulario');
+    }
+  });
+
+  // ---------- vocabulário ----------
+  let filtroVocab = 1;   // número da semana, ou 0 para todas
+
+  function desenharChipsVocab() {
+    $('#chips-vocab').innerHTML = `<button class="chip" type="button" data-semana="0" aria-pressed="${filtroVocab === 0}">Todas</button>` +
+      SEMANAS.map((_, i) => `<button class="chip" type="button" data-semana="${i + 1}" aria-pressed="${filtroVocab === i + 1}">Semana ${i + 1}</button>`).join('');
+  }
+
+  function desenharVocab() {
+    const busca = normalizar($('#busca-vocab').value.trim());
+    const blocos = [];
+    SEMANAS.forEach((s, i) => {
+      // A busca procura em todas as semanas; sem busca, vale o filtro dos chips
+      if (!busca && filtroVocab !== 0 && filtroVocab !== i + 1) return;
+      s.v.forEach((grupo) => {
+        const palavras = palavrasDoGrupo(grupo).filter((p) =>
+          !busca || normalizar(p.termo).includes(busca) || normalizar(p.traducao).includes(busca));
+        if (!palavras.length) return;
+        blocos.push(`<section>
+            <h2 class="sobretitulo grupo-titulo">${esc(grupo[0])} <span>Semana ${i + 1}</span></h2>
+            <ul class="vocab cartao">${palavras.map(itemPalavra).join('')}</ul>
+          </section>`);
+      });
+    });
+    $('#lista-vocab').innerHTML = blocos.join('') ||
+      '<p class="cartao vazio">Nenhuma palavra encontrada. Tente outro termo, em inglês ou em português.</p>';
+  }
+
+  $('#chips-vocab').addEventListener('click', (e) => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    filtroVocab = Number(chip.dataset.semana);
+    desenharChipsVocab();
+    desenharVocab();
+  });
+  $('#busca-vocab').addEventListener('input', desenharVocab);
+
+  // ---------- progresso ----------
+  // Dias seguidos com pelo menos um dia do roteiro concluído, terminando hoje ou ontem
+  function sequencia() {
+    const dias = new Set([...datas.values()].map((d) => isoLocal(new Date(d))));
+    const cursor = dataDeIso(hoje());
+    if (!dias.has(isoLocal(cursor))) cursor.setDate(cursor.getDate() - 1);
+    let n = 0;
+    while (dias.has(isoLocal(cursor))) { n++; cursor.setDate(cursor.getDate() - 1); }
+    return n;
+  }
+
+  function desenharProgresso() {
+    const total = feitos.size;
+    const pendente = proximoPendente();
+    const seguidos = sequencia();
+    $('#resumo-progresso').innerHTML = `
+      <div class="stat"><span>Concluído</span><b>${Math.round(total / TOTAL_DIAS * 100)}%</b></div>
+      <div class="stat"><span>Dias feitos</span><b>${total} de ${TOTAL_DIAS}</b></div>
+      <div class="stat"><span>Sequência</span><b>${seguidos} ${seguidos === 1 ? 'dia' : 'dias'}</b></div>
+      <div class="stat"><span>Semana atual</span><b>${pendente ? `${pendente.semana} de ${SEMANAS.length}` : 'Fim'}</b></div>`;
+    $('#lista-progresso').innerHTML = `<ul class="barras-cat cartao">${SEMANAS.map((s, i) => {
+      const n = feitosNaSemana(i + 1);
+      return `<li>
+          <div class="linha-cat"><span>${doisDigitos(i + 1)} · ${esc(s.t)}</span><span class="num-fonte">${n}/7</span></div>
+          <div class="trilho"><span class="${n === 7 ? 'dentro' : ''}" style="width: ${Math.round(n / 7 * 100)}%"></span></div>
+        </li>`;
+    }).join('')}</ul>`;
+  }
+</script>
+</body>
+</html>
