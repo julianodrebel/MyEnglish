@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "english",
+  "compatibility_date": "2026-11-16",
+  // Site estático: serve os arquivos da raiz, menos o que está no .assetsignore
+  "assets": {
+    "directory": "."
+  },
+  // Domínio próprio (a zona julianodrebel.com.br já está na Cloudflare)
+  "routes": [
+    { "pattern": "english.julianodrebel.com.br", "custom_domain": true }
+  ],
+  // Necessário para `wrangler preview` (deploy dos branches que não são produção)
+  "previews": {}
+}
